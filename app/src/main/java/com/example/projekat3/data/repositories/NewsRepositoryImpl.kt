@@ -14,7 +14,7 @@ class NewsRepositoryImpl(private val remoteDataSource: NewsService) : NewsReposi
 
     private var idCounter: AtomicLong = AtomicLong(0)
 
-    override fun fetchAll(): Observable<Resource<Unit>> {
+    override fun fetchAll(): Observable<List<News>> {//Observable<Resource<Unit>>
 //        return remoteDataSource
 //            .fetchAll()
 //            .map {
@@ -33,26 +33,24 @@ class NewsRepositoryImpl(private val remoteDataSource: NewsService) : NewsReposi
 //                Resource.Success(Unit)
 //            }
 
-    val gson = Gson()
-    val listNewsType = object : TypeToken<List<NewsResponse>>() {}.type
-    val news: List<NewsResponse> = gson.fromJson(json, listNewsType)
-    val news1 = Observable.fromArray(news)
-    return news1.map {
-        it.map { newsResponse: NewsResponse ->
-            println(newsResponse.title)
-            News(
-                id = idCounter.getAndIncrement(),
-                title = newsResponse.title,
-                content = newsResponse.title,
-                link = newsResponse.link,
-                date = newsResponse.date,
-                image = newsResponse.image
-            )
+        val gson = Gson()
+        val listNewsType = object : TypeToken<List<NewsResponse>>() {}.type
+        val news: List<NewsResponse> = gson.fromJson(json, listNewsType)
+        val newsObservable = Observable.fromArray(news)
+
+        return newsObservable.map {
+            it.map { newsResponse: NewsResponse ->
+                News(
+                    id = idCounter.getAndIncrement(),
+                    title = newsResponse.title,
+                    content = newsResponse.title,
+                    link = newsResponse.link,
+                    date = newsResponse.date,
+                    image = newsResponse.image
+                )
+            }
         }
-    }
-        .map {
-            Resource.Success(Unit)
-        }
+
     }
 
     val json = "[\n" +

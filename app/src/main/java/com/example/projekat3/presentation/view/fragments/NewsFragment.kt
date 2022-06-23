@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.SnapHelper
 import com.example.projekat3.R
 import com.example.projekat3.databinding.FragmentNewsBinding
 import com.example.projekat3.presentation.contract.NewsContract
@@ -30,7 +32,7 @@ class NewsFragment : Fragment(R.layout.fragment_news){
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentNewsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -46,9 +48,11 @@ class NewsFragment : Fragment(R.layout.fragment_news){
     }
 
     private fun initRecycler() {
+        val helper: SnapHelper = LinearSnapHelper()
+        helper.attachToRecyclerView(binding.newsRv)
         binding.newsRv.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
         adapter = NewsAdapter()
-        binding.newsRv.addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL))
+        binding.newsRv.addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.HORIZONTAL))
         binding.newsRv.adapter = adapter
     }
 
@@ -59,14 +63,17 @@ class NewsFragment : Fragment(R.layout.fragment_news){
             renderState(newsState)
         })
         newsViewModel.fetchAllNews()
+
     }
 
     private fun renderState(state: NewsState) {
         when (state) {
             is NewsState.Success -> {
-                adapter.submitList(state.courses)
+                adapter.submitList(state.news)
             }
             is NewsState.Error -> {
+                println("ERROR")
+
                 Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
             }
             is NewsState.DataFetched -> {
