@@ -1,4 +1,7 @@
 package com.example.projekat3.presentation.view.fragments
 
-class ProfileFragment {
+import androidx.fragment.app.Fragment
+import com.example.projekat3.R
+
+class ProfileFragment : Fragment(R.layout.fragment_profile) {
 }
