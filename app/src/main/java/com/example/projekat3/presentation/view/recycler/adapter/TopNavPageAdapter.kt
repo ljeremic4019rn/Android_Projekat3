@@ -13,15 +13,14 @@ class TopNavPageAdapter (fm: FragmentManager) : FragmentPagerAdapter(fm){
         const val FRAG_2_POPULAR_STOCKS = 1
     }
 
-
     override fun getCount(): Int {
         return ITEM_COUNT
     }
 
     override fun getItem(position: Int): Fragment {
         val fragment: Fragment = when (position) {
-            BottomNavPageAdapter.FRAG_1_DISCOVER -> NewsFragment()
-            BottomNavPageAdapter.FRAG_2_PORTFOLIO -> PopularStocksFragment()
+            FRAG_1_NEWS -> NewsFragment()
+            FRAG_2_POPULAR_STOCKS -> PopularStocksFragment()
             else -> throw IllegalStateException("Unexpected value: $position")
         }
         return fragment
