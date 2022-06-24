@@ -5,6 +5,7 @@
       <map>
         <entry key="..\:/Users/Shus/Programming/AndroidApps/Projekat3/app/src/main/res/drawable-v24/ic_baseline_library_books_24.xml" value="0.2835" />
         <entry key="..\:/Users/Shus/Programming/AndroidApps/Projekat3/app/src/main/res/layout/activity_app.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Shus/Programming/AndroidApps/Projekat3/app/src/main/res/layout/activity_detailed_stock.xml" value="0.26458333333333334" />
         <entry key="..\:/Users/Shus/Programming/AndroidApps/Projekat3/app/src/main/res/layout/activity_login.xml" value="0.358695652173913" />
         <entry key="..\:/Users/Shus/Programming/AndroidApps/Projekat3/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Shus/Programming/AndroidApps/Projekat3/app/src/main/res/layout/fragment_discover.xml" value="0.36666666666666664" />
@@ -15,6 +16,7 @@
         <entry key="..\:/Users/Shus/Programming/AndroidApps/Projekat3/app/src/main/res/layout/fragment_stocks.xml" value="0.2552083333333333" />
         <entry key="..\:/Users/Shus/Programming/AndroidApps/Projekat3/app/src/main/res/layout/news_item.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Shus/Programming/AndroidApps/Projekat3/app/src/main/res/layout/popular_stocks_item.xml" value="0.2552083333333333" />
+        <entry key="..\:/Users/Shus/Programming/AndroidApps/Projekat3/app/src/main/res/layout/stocks_item.xml" value="0.33" />
         <entry key="..\:/Users/Shus/Programming/AndroidApps/Projekat3/app/src/main/res/menu/bottom_navigation.xml" value="0.36666666666666664" />
       </map>
     </option>

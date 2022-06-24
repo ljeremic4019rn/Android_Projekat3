@@ -2,6 +2,7 @@ package com.example.projekat3.presentation.viewModel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.projekat3.data.models.stocks.DetailedStock
 import com.example.projekat3.data.repositories.StocksRepository
 import com.example.projekat3.presentation.contract.StocksContract
 import com.example.projekat3.presentation.view.states.NewsState
@@ -16,10 +17,10 @@ class StocksViewModel (private val stocksRepository: StocksRepository) : ViewMod
 
     private val subscriptions = CompositeDisposable()
     override val stockState: MutableLiveData<StocksState> = MutableLiveData()
+    override var detailedStock: DetailedStock? = null
 
 
     override fun fetchAllStocks(json: String) {
-
         val subscription = stocksRepository
             .fetchAll(json)
             .subscribeOn(Schedulers.io())
@@ -33,6 +34,11 @@ class StocksViewModel (private val stocksRepository: StocksRepository) : ViewMod
                     Timber.e(it)
                 }
             )
-        subscriptions.add(subscription)    }
+        subscriptions.add(subscription)
+    }
+
+    override fun searchStock(json: String) {
+        detailedStock = stocksRepository.searchStock(json)
+    }
 
 }

@@ -3,14 +3,14 @@ package com.example.projekat3.data.models.stocks
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-class StockResponse (
+class DetailedStockResponse (
     val symbol: String,
     val name: String,
     val currency: String,
-    val last: Double,
-    val changeFromPreviousClose: Double,
-    val percentChangeFromPreviousClose: Double,
-    val marketName: String,
-    val recommendation: Recommendation,
+    val open: Double,
+    val close: Double,
+    val bid: Double,
+    val ask: Double,
+    val metrics: Metrics,
     val chart: Chart
 )

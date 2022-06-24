@@ -7,10 +7,7 @@ import com.squareup.picasso.Picasso
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class NewsViewHolder (
-    private val itemBinding: NewsItemBinding,
-    val openLink: (position: Int) -> Unit
-) : RecyclerView.ViewHolder(itemBinding.root){
+class NewsViewHolder (private val itemBinding: NewsItemBinding, val openLink: (position: Int) -> Unit) : RecyclerView.ViewHolder(itemBinding.root){
 
     init {
         itemBinding.root.setOnClickListener {
