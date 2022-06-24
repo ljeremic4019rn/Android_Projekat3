@@ -6,7 +6,6 @@ import com.example.projekat3.presentation.view.states.NewsState
 interface NewsContract {
     interface ViewModel {
         val newsState: LiveData<NewsState>
-
-        fun fetchAllNews()
+        fun fetchAllNews(json: String)
     }
 }

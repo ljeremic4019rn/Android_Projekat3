@@ -14,23 +14,24 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.SnapHelper
 import com.example.projekat3.R
-import com.example.projekat3.data.models.news.News
-import com.example.projekat3.databinding.FragmentNewsBinding
-import com.example.projekat3.presentation.contract.NewsContract
+
+import com.example.projekat3.databinding.FragmentStocksBinding
+import com.example.projekat3.presentation.contract.StocksContract
 import com.example.projekat3.presentation.view.recycler.adapter.NewsAdapter
-import com.example.projekat3.presentation.view.states.NewsState
-import com.example.projekat3.presentation.viewModel.NewsViewModel
+import com.example.projekat3.presentation.view.recycler.adapter.StocksAdapter
+import com.example.projekat3.presentation.view.states.StocksState
+import com.example.projekat3.presentation.viewModel.StocksViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 import java.io.IOException
 import java.io.InputStream
 
-class NewsFragment : Fragment(R.layout.fragment_news){
+class StocksFragment : Fragment(R.layout.fragment_stocks){
 
-    private val newsViewModel: NewsContract.ViewModel by sharedViewModel<NewsViewModel>()
-    private var _binding: FragmentNewsBinding? = null
+    private val stockViewModel: StocksContract.ViewModel by sharedViewModel<StocksViewModel>()
+    private var _binding: FragmentStocksBinding? = null
     private val binding get() = _binding!!
-    private lateinit var adapter: NewsAdapter
+    private lateinit var adapter: StocksAdapter
 
 
     override fun onCreateView(
@@ -38,7 +39,7 @@ class NewsFragment : Fragment(R.layout.fragment_news){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentNewsBinding.inflate(inflater, container, false)
+        _binding = FragmentStocksBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -54,29 +55,25 @@ class NewsFragment : Fragment(R.layout.fragment_news){
 
     private fun initRecycler() {
         val helper: SnapHelper = LinearSnapHelper()
-        helper.attachToRecyclerView(binding.newsRv)
-        binding.newsRv.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
-        adapter = NewsAdapter(::openLink)
-        binding.newsRv.addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.HORIZONTAL))
-        binding.newsRv.adapter = adapter
+        helper.attachToRecyclerView(binding.stocksRv)
+        adapter = StocksAdapter()
+        binding.stocksRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL,false)
+        binding.stocksRv.addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL))
+        binding.stocksRv.adapter = adapter
     }
 
-    private fun openLink(news: News){
-        val openURL = Intent(Intent.ACTION_VIEW)
-        openURL.data = Uri.parse(news.link)
-        startActivity(openURL)
-    }
+
 
     private fun initObservers() {
-        newsViewModel.newsState.observe(viewLifecycleOwner, Observer { newsState ->
-            renderState(newsState)
+        stockViewModel.stockState.observe(viewLifecycleOwner, Observer { stockState ->
+            renderState(stockState)
         })
-        val myJson = activity?.resources?.openRawResource(R.raw.news)
+        val myJson = activity?.resources?.openRawResource(R.raw.indexes)
             ?.let {
                 inputStreamToString(it)
             }
         if (myJson != null) {
-            newsViewModel.fetchAllNews(myJson)
+            stockViewModel.fetchAllStocks(myJson)
         }
     }
 
@@ -90,24 +87,22 @@ class NewsFragment : Fragment(R.layout.fragment_news){
         }
     }
 
-    private fun renderState(state: NewsState) {
+    private fun renderState(state: StocksState) {
         when (state) {
-            is NewsState.Success -> {
-                adapter.submitList(state.news)
+            is StocksState.Success -> {
+                adapter.submitList(state.stocks)
             }
-            is NewsState.Error -> {
+            is StocksState.Error -> {
                 println("ERROR")
 
                 Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
             }
-            is NewsState.DataFetched -> {
+            is StocksState.DataFetched -> {
                 Toast.makeText(context, "Fresh data fetched from the server", Toast.LENGTH_LONG)
                     .show()
             }
         }
     }
-
-
 
     override fun onDestroyView() {
         super.onDestroyView()

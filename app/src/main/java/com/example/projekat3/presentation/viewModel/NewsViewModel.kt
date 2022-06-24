@@ -20,10 +20,9 @@ class NewsViewModel (private val newsRepository: NewsRepository) : ViewModel(), 
     private val subscriptions = CompositeDisposable()
     override val newsState: MutableLiveData<NewsState> = MutableLiveData()
 
-
-    override fun fetchAllNews() {
+    override fun fetchAllNews(json: String) {
         val subscription = newsRepository
-            .fetchAll()
+            .fetchAll(json)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(

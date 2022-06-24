@@ -5,5 +5,5 @@ import com.example.projekat3.data.models.news.Resource
 import io.reactivex.Observable
 
 interface NewsRepository {
-    fun fetchAll(): Observable<List<News>>
+    fun fetchAll(json: String): Observable<List<News>>
 }

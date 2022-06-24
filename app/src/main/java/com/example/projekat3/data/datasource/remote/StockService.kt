@@ -1,13 +1,11 @@
 package com.example.projekat3.data.datasource.remote
 
-import com.example.projekat3.data.models.news.News
 import com.example.projekat3.data.models.news.NewsResponse
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.example.projekat3.data.models.stocks.StockResponse
 import io.reactivex.Observable
 import retrofit2.http.GET
 
-interface NewsService {
+interface StockService {
 //    @GET("")//todo fix
-//    fun fetchAll(): Observable<List<NewsResponse>>
+//    fun fetchAll(): Observable<List<StockResponse>>
 }

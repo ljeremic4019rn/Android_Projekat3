@@ -4,7 +4,6 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 class NewsResponse(
-    val id: Long,
     val title: String,
     val content: String,
     val link: String,

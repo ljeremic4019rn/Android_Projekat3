@@ -10,6 +10,7 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.fragment.koin.fragmentFactory
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
+import stockModule
 
 
 class Application : Application() {
@@ -31,7 +32,8 @@ class Application : Application() {
     private fun initKoin() {
         val modules = listOf(
             coreModule,
-            newsModule
+            newsModule,
+            stockModule
         )
         startKoin {
             androidLogger(Level.ERROR)

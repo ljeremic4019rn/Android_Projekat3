@@ -20,7 +20,7 @@ class TopNavPageAdapter (fm: FragmentManager) : FragmentPagerAdapter(fm){
     override fun getItem(position: Int): Fragment {
         val fragment: Fragment = when (position) {
             FRAG_1_NEWS -> NewsFragment()
-            FRAG_2_POPULAR_STOCKS -> PopularStocksFragment()
+            FRAG_2_POPULAR_STOCKS -> StocksFragment()
             else -> throw IllegalStateException("Unexpected value: $position")
         }
         return fragment
