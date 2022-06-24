@@ -1,5 +1,7 @@
 package com.example.projekat3.presentation.view.fragments
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.SnapHelper
 import com.example.projekat3.R
+import com.example.projekat3.data.models.news.News
 import com.example.projekat3.databinding.FragmentNewsBinding
 import com.example.projekat3.presentation.contract.NewsContract
 import com.example.projekat3.presentation.view.recycler.adapter.NewsAdapter
@@ -51,11 +54,16 @@ class NewsFragment : Fragment(R.layout.fragment_news){
         val helper: SnapHelper = LinearSnapHelper()
         helper.attachToRecyclerView(binding.newsRv)
         binding.newsRv.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
-        adapter = NewsAdapter()
+        adapter = NewsAdapter(::openLink)
         binding.newsRv.addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.HORIZONTAL))
         binding.newsRv.adapter = adapter
     }
 
+    private fun openLink(news: News){
+        val openURL = Intent(Intent.ACTION_VIEW)
+        openURL.data = Uri.parse(news.link)
+        startActivity(openURL)
+    }
 
     private fun initObservers() {
         newsViewModel.newsState.observe(viewLifecycleOwner, Observer { newsState ->
@@ -82,6 +90,8 @@ class NewsFragment : Fragment(R.layout.fragment_news){
             }
         }
     }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()
