@@ -20,5 +20,5 @@ abstract class UserDao {
     abstract fun insert(userEntity: UserEntity): Completable
 
     @Query("SELECT * FROM users WHERE username == :username AND email == :email AND password == :password")
-    abstract fun getUserByUsernameEmailPass(username: String, email: String, password: String): Single<User>
+    abstract fun getUserByUsernameEmailPass(username: String, email: String, password: String): Observable<UserEntity>
 }

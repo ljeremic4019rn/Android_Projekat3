@@ -19,7 +19,7 @@ class UserRepositoryImpl (private val userDao: UserDao, private val stockDao: St
 
 
 
-    override fun getUserByNameMailPass(username: String, email: String,password: String): Single<User> {
+    override fun getUserByNameMailPass(username: String, email: String,password: String): Observable<UserEntity> {
         return userDao.getUserByUsernameEmailPass(username, email, password)
     }
 

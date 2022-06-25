@@ -115,7 +115,7 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
 
             //ako je buy onda cemo da na bazu dodamo + value
             //ako je sell na bazu dodajemo - value
-            if (name != null && symbol != null && numberOfBought != null && balanceSpent != null)
+            if (name != null && symbol != null && numberOfBought != null && balanceSpent != null) {
                 userViewModel.insertStock(
                     LocalStockEntity(
                         0,
@@ -127,6 +127,9 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
                         balanceSpent
                     )
                 )
+                userViewModel.user.balance += balanceSpent//todo ovo treba da ide u bazu a ne u lokalnu varijablu, uradi stura
+                userViewModel.user.portfolioValue += balanceSpent
+            }
         }
     }
 

@@ -5,6 +5,6 @@ data class User(
     val username: String,
     val email: String,
     val password: String,
-    val balance: Double,
-    val portfolioValue: Double,
+    var balance: Double,
+    var portfolioValue: Double,
 )

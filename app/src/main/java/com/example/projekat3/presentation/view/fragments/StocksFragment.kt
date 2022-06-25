@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -61,6 +62,18 @@ class StocksFragment : Fragment(R.layout.fragment_stocks){
     private fun init() {
         initRecycler()
         initObservers()
+        loadUser()
+    }
+
+    private fun loadUser(){//todo ovo proveri kasnije
+        val sharedPreferences = activity?.getSharedPreferences(activity?.packageName, AppCompatActivity.MODE_PRIVATE)
+
+        val username = sharedPreferences?.getString("username", "")
+        val email = sharedPreferences?.getString("username", "")
+        val password = sharedPreferences?.getString("username", "")
+
+        if (username != null && email != null && password != null)
+            userViewModel.getUserByNameMailPass(username, email, password)
     }
 
     private fun initObservers() {
@@ -106,8 +119,6 @@ class StocksFragment : Fragment(R.layout.fragment_stocks){
         if (it.resultCode == Activity.RESULT_OK) {
             val data = it.data
 
-            println("URADNJENO")
-
             val dateNow: Date = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant())
 
             val numberOfBought = data?.getIntExtra("numberOfBought",0)
@@ -117,18 +128,24 @@ class StocksFragment : Fragment(R.layout.fragment_stocks){
 
             //ako je buy onda cemo da na bazu dodamo + value
             //ako je sell na bazu dodajemo - value
-            if (name != null && symbol != null && numberOfBought != null && balanceSpent != null)
-            userViewModel.insertStock(
-                LocalStockEntity(
-                    0,
-                    userViewModel.user.id,
-                    name,
-                    numberOfBought,
-                    symbol,
-                    dateNow.toString(),
-                    balanceSpent
+            if (name != null && symbol != null && numberOfBought != null && balanceSpent != null) {
+                userViewModel.insertStock(
+                    LocalStockEntity(
+                        0,
+                        userViewModel.user.id,
+                        name,
+                        numberOfBought,
+                        symbol,
+                        dateNow.toString(),
+                        balanceSpent
+                    )
                 )
-            )
+
+                userViewModel.user.balance += balanceSpent
+
+            }
+
+
         }
     }
 

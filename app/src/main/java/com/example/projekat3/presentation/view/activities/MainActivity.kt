@@ -22,8 +22,7 @@ class MainActivity : AppCompatActivity() {
 
         val splashScreen: SplashScreen = installSplashScreen()
         splashScreen.setKeepOnScreenCondition {
-            val sharedPreferences =
-                getSharedPreferences(packageName, MODE_PRIVATE)
+            val sharedPreferences = getSharedPreferences(packageName, MODE_PRIVATE)
             val username = sharedPreferences.getString("username", "")
             intent = if (username == "") {
                 Intent(this, LoginActivity::class.java)

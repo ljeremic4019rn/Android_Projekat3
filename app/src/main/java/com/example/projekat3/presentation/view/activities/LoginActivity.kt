@@ -45,6 +45,7 @@ class LoginActivity : AppCompatActivity() {
                     .edit()
                     .putString("username", username)
                     .putString("email", email)
+                    .putString("password", password)
                     .apply()
 
                 val intent = Intent(this, AppActivity::class.java)

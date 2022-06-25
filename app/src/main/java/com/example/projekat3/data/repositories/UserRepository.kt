@@ -10,11 +10,10 @@ import io.reactivex.Observable
 import io.reactivex.Single
 
 interface UserRepository {
-    fun getUserByNameMailPass(username: String, email: String, password: String): Single<User>
+    fun getUserByNameMailPass(username: String, email: String, password: String): Observable<UserEntity>
     fun insertUser(user: UserEntity): Completable
 
     fun insertStock(localStockEntity: LocalStockEntity): Completable
     fun getAllStocksFromUser(userId: Long): Observable<List<LocalStock>>
     fun searchStock (json: String): DetailedStock
-
 }

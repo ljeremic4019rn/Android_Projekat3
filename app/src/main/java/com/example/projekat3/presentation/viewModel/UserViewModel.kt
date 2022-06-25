@@ -22,8 +22,14 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel(), U
     private val subscriptions = CompositeDisposable()
     override val userState: MutableLiveData<UserState> = MutableLiveData()
 
-    override val user: User = User(0, "username", "email@email.com", "password", 10000.0, 0.0)
+    override var user: User = User(0, "username", "email@email.com", "password", 10000.0, 0.0)
     override var detailedStock: DetailedStock? = null
+
+    init {
+        getUserByNameMailPass("username","asd@gmail.com","password")
+        println("user")
+        println(user.toString())
+    }
 
 
 
@@ -43,7 +49,7 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel(), U
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-//                    user = User(it.id, it.username, it.email, it.password, it.balance, it.portfolioValue)
+                    user = User(it.id, it.username, it.email, it.password, it.balance, it.portfolioValue)
                 },
                 {
                     Timber.e(it)
