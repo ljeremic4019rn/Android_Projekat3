@@ -18,6 +18,12 @@
             android:name=".presentation.view.activities.AppActivity"
             android:exported="true"/>
         <activity
+            android:name=".presentation.view.activities.SellActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".presentation.view.activities.BuyActivity"
+            android:exported="true"/>
+        <activity
             android:name=".presentation.view.activities.DetailedStockActivity"
             android:exported="true"/>
         <activity

@@ -1,4 +1,4 @@
-package com.example.projekat3.presentation.view.recycler.adapter;
+package com.example.projekat3.presentation.view.recycler.adapter.viewAdapters;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -8,9 +8,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
 
-public class NonScrollableViewPager extends ViewPager {
+public class NonScrollableViewAdapter extends ViewPager {
 
-    public NonScrollableViewPager(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public NonScrollableViewAdapter(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 

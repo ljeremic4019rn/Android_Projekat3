@@ -6,7 +6,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.example.projekat3.R
-import com.example.projekat3.presentation.view.recycler.adapter.BottomNavPageAdapter
+import com.example.projekat3.presentation.view.recycler.adapter.viewAdapters.BottomNavPageAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class AppActivity : AppCompatActivity() {

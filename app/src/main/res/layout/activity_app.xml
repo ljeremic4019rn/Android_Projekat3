@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".presentation.view.activities.AppActivity">
 
-    <com.example.projekat3.presentation.view.recycler.adapter.NonScrollableViewPager
+    <com.example.projekat3.presentation.view.recycler.adapter.viewAdapters.NonScrollableViewAdapter
         android:id="@+id/viewPager"
         android:layout_width="0dp"
         app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
@@ -14,7 +14,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_height="0dp">
-    </com.example.projekat3.presentation.view.recycler.adapter.NonScrollableViewPager>
+    </com.example.projekat3.presentation.view.recycler.adapter.viewAdapters.NonScrollableViewAdapter>
 
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

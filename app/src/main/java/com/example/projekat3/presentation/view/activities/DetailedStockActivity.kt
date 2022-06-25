@@ -2,6 +2,8 @@ package com.example.projekat3.presentation.view.activities
 
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,14 +11,14 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import com.example.projekat3.R
-import com.example.projekat3.data.models.stocks.Chart
 import com.example.projekat3.data.models.stocks.DetailedStock
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import timber.log.Timber
 
 class DetailedStockActivity : AppCompatActivity() {
 
@@ -38,14 +40,16 @@ class DetailedStockActivity : AppCompatActivity() {
 
     lateinit var detailedStock: DetailedStock
 
+    private var balance = 0.0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detailed_stock)
 
         if (intent.getParcelableExtra<DetailedStock>("detailedStock") != null) {
-            detailedStock = intent.getParcelableExtra<DetailedStock>("detailedStock")!!
-
+            detailedStock = intent.getParcelableExtra("detailedStock")!!
+            balance = intent.getDoubleExtra("balance", 0.0)
         } else {
             Toast.makeText(this, "Error while loading stock", Toast.LENGTH_LONG).show()
             return
@@ -53,6 +57,7 @@ class DetailedStockActivity : AppCompatActivity() {
 
         initFields()
         setData()
+        setListeners()
     }
 
     private fun initFields() {
@@ -80,22 +85,20 @@ class DetailedStockActivity : AppCompatActivity() {
     private fun setData() {
 
         stockSymbol.text = "symbol: " + detailedStock.symbol
-        stockValue.text = "value: " +detailedStock.last.toString()
+        stockValue.text = "value: " + detailedStock.last.toString()
 
-
-        mktCap.text ="mtkCap: " + detailedStock.metrics.marketCup.toString()
+        mktCap.text = "mtkCap: " + detailedStock.metrics.marketCup.toString()
         open.text = "open: " + detailedStock.open.toString()
-        bid.text ="bid: " + detailedStock.bid.toString()
-        close.text ="close: " + detailedStock.close.toString()
-        ask.text ="ask: " + detailedStock.ask.toString()
-        divYield.text  = ""
-        pe.text ="pe: " + (detailedStock.last / detailedStock.metrics.marketCup).toString()
-        eps.text ="eps: " + detailedStock.metrics.eps.toString()
-        ebit.text ="ebit: " + detailedStock.metrics.ebit.toString()
-        beta.text ="beta: " + detailedStock.metrics.beta.toString()
+        bid.text = "bid: " + detailedStock.bid.toString()
+        close.text = "close: " + detailedStock.close.toString()
+        ask.text = "ask: " + detailedStock.ask.toString()
+        divYield.text = ""
+        pe.text = "pe: " + (detailedStock.last / detailedStock.metrics.marketCup).toString()
+        eps.text = "eps: " + detailedStock.metrics.eps.toString()
+        ebit.text = "ebit: " + detailedStock.metrics.ebit.toString()
+        beta.text = "beta: " + detailedStock.metrics.beta.toString()
 
-
-        //chart value
+        //chart
         val ourLineChartEntries: ArrayList<Entry> = ArrayList()
         var i = 0
 
@@ -118,15 +121,76 @@ class DetailedStockActivity : AppCompatActivity() {
         chart.invalidate()
     }
 
-    private fun setListeners() {
+    private fun setListeners() {//todo
         buyButton.setOnClickListener {
-
+            startBuyActivity()
         }
 
         sellButton.setOnClickListener {
-
+            startSellActivity()
         }
     }
 
+
+    fun startSellActivity() {
+        val intent = Intent(this, SellActivity::class.java)
+        intent.putExtra("name", detailedStock.name)
+        intent.putExtra("symbol", detailedStock.name)
+        intent.putExtra("numberOfOwned", this.intent.getIntExtra("numberOfOwned", 0))
+        doSellAction.launch(intent)
+    }
+
+    private val doSellAction: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            val data = it.data
+
+            val numberOfSold = data?.getIntExtra("numberOfSold",0)!!
+            val balanceGained = numberOfSold.times(detailedStock.last)
+
+            val returnIntent = Intent()
+            returnIntent.putExtra("numberOfBought", numberOfSold * -1)
+            returnIntent.putExtra("balanceSpent", balanceGained)
+            returnIntent.putExtra("name", detailedStock.name)
+            returnIntent.putExtra("symbol", detailedStock.symbol)
+            this.setResult(RESULT_OK, returnIntent)
+            this.finish()
+        }
+    }
+
+
+    fun startBuyActivity() {
+        val intent = Intent(this, BuyActivity::class.java)
+        intent.putExtra("detailedStock", detailedStock)
+        intent.putExtra("balance", balance)
+        intent.putExtra("last", detailedStock.last)
+        doBuyAction.launch(intent)
+    }
+
+    private val doBuyAction: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            val data = it.data
+
+            var numberOfBought = 0
+            var balanceSpent = 0.0
+
+            if (data?.getStringExtra("mode") == "balance") {
+                val balanceEntered = data.getIntExtra("number", 0)
+                numberOfBought = (balanceEntered / detailedStock.last).toInt()
+                balanceSpent  = numberOfBought * detailedStock.last
+            }
+            else if (data?.getStringExtra("mode") == "number") {
+                numberOfBought = data.getIntExtra("number", 0)
+                balanceSpent = numberOfBought * detailedStock.last
+            }
+
+            val returnIntent = Intent()
+            returnIntent.putExtra("numberOfBought", numberOfBought)
+            returnIntent.putExtra("balanceSpent", balanceSpent * -1)
+            returnIntent.putExtra("name", detailedStock.name)
+            returnIntent.putExtra("symbol", detailedStock.symbol)
+            this.setResult(RESULT_OK, returnIntent)
+            this.finish()
+        }
+    }
 
 }

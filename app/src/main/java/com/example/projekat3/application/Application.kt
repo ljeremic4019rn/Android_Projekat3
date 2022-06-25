@@ -1,6 +1,7 @@
 package com.example.projekat3.application
 
 import android.app.Application
+import com.example.projekat3.moduls.userModule
 import timber.log.Timber
 import coreModule
 import newsModule
@@ -33,7 +34,8 @@ class Application : Application() {
         val modules = listOf(
             coreModule,
             newsModule,
-            stockModule
+            stockModule,
+            userModule
         )
         startKoin {
             androidLogger(Level.ERROR)

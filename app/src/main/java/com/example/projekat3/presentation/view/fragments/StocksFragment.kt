@@ -17,20 +17,27 @@ import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.SnapHelper
 import com.example.projekat3.R
 import com.example.projekat3.data.models.stocks.DetailedStock
+import com.example.projekat3.data.models.stocks.LocalStockEntity
 import com.example.projekat3.data.models.stocks.Stock
 import com.example.projekat3.databinding.FragmentStocksBinding
 import com.example.projekat3.presentation.contract.StocksContract
+import com.example.projekat3.presentation.contract.UserContract
 import com.example.projekat3.presentation.view.activities.DetailedStockActivity
 import com.example.projekat3.presentation.view.recycler.adapter.StocksAdapter
 import com.example.projekat3.presentation.view.states.StocksState
 import com.example.projekat3.presentation.viewModel.StocksViewModel
+import com.example.projekat3.presentation.viewModel.UserViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.io.IOException
 import java.io.InputStream
+import java.time.LocalDate
+import java.time.ZoneId
+import java.util.*
 
 class StocksFragment : Fragment(R.layout.fragment_stocks){
 
     private val stockViewModel: StocksContract.ViewModel by sharedViewModel<StocksViewModel>()
+    private val userViewModel: UserContract.ViewModel by sharedViewModel<UserViewModel>()
 
     private var _binding: FragmentStocksBinding? = null
     private val binding get() = _binding!!
@@ -56,6 +63,17 @@ class StocksFragment : Fragment(R.layout.fragment_stocks){
         initObservers()
     }
 
+    private fun initObservers() {
+        stockViewModel.stockState.observe(viewLifecycleOwner, Observer { stockState ->
+            renderState(stockState)
+        })
+        val myJson = activity?.resources?.openRawResource(R.raw.indexes)
+            ?.let { inputStreamToString(it) }
+        if (myJson != null) {
+            stockViewModel.fetchAllStocks(myJson)
+        }
+    }
+
     private fun initRecycler() {
         val helper: SnapHelper = LinearSnapHelper()
         helper.attachToRecyclerView(binding.stocksRv)
@@ -73,42 +91,44 @@ class StocksFragment : Fragment(R.layout.fragment_stocks){
         if (myJson != null) {
             stockViewModel.searchStock(myJson)
             startDetailedActivity(stockViewModel.detailedStock)
-
         }
     }
 
     fun startDetailedActivity(detailedStock: DetailedStock?) {
         val intent = Intent(activity, DetailedStockActivity::class.java)
-
-        println("pre")
-        println(detailedStock)
-
         intent.putExtra("detailedStock", detailedStock)
+        intent.putExtra("numberOfOwned", 15)//todo ovaj broj povuci iz baze
+        intent.putExtra("balance", userViewModel.user.balance)//todo ovaj broj povuci iz baze
         doAction.launch(intent)
     }
 
     private val doAction: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == Activity.RESULT_OK) {
             val data = it.data
-//            val detailedStock = data?.getStringExtra("detailedStock")
-            println("GOTOVO JE")
-//            if (true)
-                TODO(/*ako bude trebalo stavi nesto*/)
-//                noteViewModel.updateNote(id, title, content)
-        }
-    }
 
+            println("URADNJENO")
 
-    private fun initObservers() {
-        stockViewModel.stockState.observe(viewLifecycleOwner, Observer { stockState ->
-            renderState(stockState)
-        })
-        val myJson = activity?.resources?.openRawResource(R.raw.indexes)
-            ?.let {
-                inputStreamToString(it)
-            }
-        if (myJson != null) {
-            stockViewModel.fetchAllStocks(myJson)
+            val dateNow: Date = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant())
+
+            val numberOfBought = data?.getIntExtra("numberOfBought",0)
+            val balanceSpent = data?.getDoubleExtra("balanceSpent",0.0)
+            val name = data?.getStringExtra("name")
+            val symbol = data?.getStringExtra("symbol")
+
+            //ako je buy onda cemo da na bazu dodamo + value
+            //ako je sell na bazu dodajemo - value
+            if (name != null && symbol != null && numberOfBought != null && balanceSpent != null)
+            userViewModel.insertStock(
+                LocalStockEntity(
+                    0,
+                    userViewModel.user.id,
+                    name,
+                    numberOfBought,
+                    symbol,
+                    dateNow.toString(),
+                    balanceSpent
+                )
+            )
         }
     }
 

@@ -5,7 +5,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.example.projekat3.R
-import com.example.projekat3.presentation.view.recycler.adapter.TopNavPageAdapter
+import com.example.projekat3.presentation.view.recycler.adapter.viewAdapters.TopNavPageAdapter
 import com.google.android.material.tabs.TabLayout
 
 class DiscoverFragment : Fragment(R.layout.fragment_discover){

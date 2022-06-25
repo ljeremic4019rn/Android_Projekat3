@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Projekat3</string>
+    <string name="number_of_stocks_to_buy">Number of stocks to buy</string>
+    <string name="buy">Buy</string>
+    <string name="number_of_stock_to_sell">Number of stock to sell:</string>
+    <string name="sell">Sell</string>
 </resources>
