@@ -49,6 +49,7 @@ class StocksRepositoryImpl(private val remoteDataSource: StockService) : StocksR
                 symbol = dsResponse.symbol,
                 name = dsResponse.name,
                 currency = dsResponse.currency,
+                last = dsResponse.last,
                 open = dsResponse.open,
                 close = dsResponse.close,
                 bid = dsResponse.bid,

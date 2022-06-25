@@ -7,6 +7,7 @@ class DetailedStockResponse (
     val symbol: String,
     val name: String,
     val currency: String,
+    val last: Double,
     val open: Double,
     val close: Double,
     val bid: Double,

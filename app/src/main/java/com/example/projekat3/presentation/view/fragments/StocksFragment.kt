@@ -72,8 +72,6 @@ class StocksFragment : Fragment(R.layout.fragment_stocks){
             }
         if (myJson != null) {
             stockViewModel.searchStock(myJson)
-            println("aaaaaaaa")
-            println(stockViewModel.detailedStock)
             startDetailedActivity(stockViewModel.detailedStock)
 
         }
@@ -129,10 +127,6 @@ class StocksFragment : Fragment(R.layout.fragment_stocks){
         when (state) {
             is StocksState.Success -> {
                 adapter.submitList(state.stocks)
-            }
-            is StocksState.SuccessSearch -> {
-                println("PRINT DETAILED STOCK")
-                println(state.detailedStock)
             }
             is StocksState.Error -> {
                 println("ERROR")

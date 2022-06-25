@@ -1,6 +1,8 @@
 package com.example.projekat3.presentation.view.activities
 
 
+import android.annotation.SuppressLint
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -11,6 +13,9 @@ import com.example.projekat3.R
 import com.example.projekat3.data.models.stocks.Chart
 import com.example.projekat3.data.models.stocks.DetailedStock
 import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 import timber.log.Timber
 
 class DetailedStockActivity : AppCompatActivity() {
@@ -71,23 +76,46 @@ class DetailedStockActivity : AppCompatActivity() {
         beta = findViewById<View>(R.id.betaTextView) as TextView
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setData() {
 
-        stockSymbol.text = detailedStock.symbol
-        stockValue.text = detailedStock.name
+        stockSymbol.text = "symbol: " + detailedStock.symbol
+        stockValue.text = "value: " +detailedStock.last.toString()
 
-//        chart = detailedStock.chart
 
-        mktCap
-        open
-        bid
-        close
-        ask
-        divYield
-        pe
-        eps
-        ebit
-        beta.text = detailedStock.metrics.beta.toString()
+        mktCap.text ="mtkCap: " + detailedStock.metrics.marketCup.toString()
+        open.text = "open: " + detailedStock.open.toString()
+        bid.text ="bid: " + detailedStock.bid.toString()
+        close.text ="close: " + detailedStock.close.toString()
+        ask.text ="ask: " + detailedStock.ask.toString()
+        divYield.text  = ""
+        pe.text ="pe: " + (detailedStock.last / detailedStock.metrics.marketCup).toString()
+        eps.text ="eps: " + detailedStock.metrics.eps.toString()
+        ebit.text ="ebit: " + detailedStock.metrics.ebit.toString()
+        beta.text ="beta: " + detailedStock.metrics.beta.toString()
+
+
+        //chart value
+        val ourLineChartEntries: ArrayList<Entry> = ArrayList()
+        var i = 0
+
+        chart.setBackgroundColor(Color.WHITE)
+        chart.description.isEnabled = false
+        chart.setDrawGridBackground(false)
+        chart.isDragEnabled = true
+        chart.setScaleEnabled(true)
+        chart.setPinchZoom(true)
+
+        detailedStock.chart.bars.forEach {
+            val value = it.price.toFloat()
+            ourLineChartEntries.add(Entry(i++.toFloat(), value))
+        }
+
+        val lineDataSet = LineDataSet(ourLineChartEntries, "")
+        lineDataSet.color = Color.BLACK
+        val data = LineData(lineDataSet)
+        chart.data = data
+        chart.invalidate()
     }
 
     private fun setListeners() {
