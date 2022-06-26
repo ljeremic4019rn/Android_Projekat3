@@ -141,7 +141,8 @@ class StocksFragment : Fragment(R.layout.fragment_stocks){
                     )
                 )
 
-                userViewModel.user.balance += balanceSpent
+                userViewModel.user.balance += balanceSpent//todo ovo treba da ide u bazu a ne u lokalnu varijablu, uradi stura
+                userViewModel.user.portfolioValue += balanceSpent//todo balance na bazi
 
             }
 
