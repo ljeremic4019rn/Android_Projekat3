@@ -3,6 +3,7 @@ package com.example.projekat3.presentation.viewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.projekat3.data.models.stocks.DetailedStock
+import com.example.projekat3.data.models.stocks.GroupedStock
 import com.example.projekat3.data.models.stocks.LocalStock
 import com.example.projekat3.data.models.stocks.LocalStockEntity
 import com.example.projekat3.data.models.user.User
@@ -16,12 +17,12 @@ import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
 class PortfolioViewModel(private val portfolioRepository: PortfolioRepository) : ViewModel(), PortfolioContract.ViewModel {
-
     private val subscriptions = CompositeDisposable()
     override val portfolioState: MutableLiveData<PortfolioState> = MutableLiveData()
     override var userStocks: MutableLiveData<List<LocalStock>> = MutableLiveData()
     override var user: MutableLiveData<User> = MutableLiveData()
     override var detailedStock: DetailedStock? = null
+    override val amountOfOwned: ArrayList<GroupedStock> = arrayListOf()
 
 
     init {//todo ovo je cisto da bi se baza otkljucala i mogli da vidimo sta je upisano - obrisi
@@ -36,14 +37,18 @@ class PortfolioViewModel(private val portfolioRepository: PortfolioRepository) :
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                {//todo ako je nepostojeci user, vuce prvog iz baze, popravi / modifikuj ovo da radi pravilno
+                {
                     user.value = User(it.id, it.username, it.email, it.password, it.balance, it.portfolioValue)
+
+
                 },
                 {
                     Timber.e(it)
                 }
             )
         subscriptions.add(subscription)
+
+
     }
 
 
@@ -138,5 +143,4 @@ class PortfolioViewModel(private val portfolioRepository: PortfolioRepository) :
     override fun searchStock(json: String) {
         detailedStock = portfolioRepository.searchStock(json)
     }
-
 }

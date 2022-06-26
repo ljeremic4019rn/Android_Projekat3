@@ -98,8 +98,8 @@ class StocksFragment : Fragment(R.layout.fragment_stocks){
     fun startDetailedActivity(detailedStock: DetailedStock?) {
         val intent = Intent(activity, DetailedStockActivity::class.java)
         intent.putExtra("detailedStock", detailedStock)
-        intent.putExtra("numberOfOwned", 15)//todo ovaj broj povuci iz baze
-        intent.putExtra("balance", portfolioViewModel.user.value!!.balance)//todo ovaj broj povuci iz baze
+        intent.putExtra("numberOfOwned",getAmountOfClickedStock(detailedStock!!.name))//todo ovaj broj povuci iz baze
+        intent.putExtra("balance", portfolioViewModel.user.value!!.balance)
         doAction.launch(intent)
     }
 
@@ -164,6 +164,13 @@ class StocksFragment : Fragment(R.layout.fragment_stocks){
                     .show()
             }
         }
+    }
+
+    private fun getAmountOfClickedStock(name: String): Int{
+        portfolioViewModel.amountOfOwned.forEach{
+            if (it.name == name) return it.sum
+        }
+        return 0
     }
 
     override fun onDestroyView() {

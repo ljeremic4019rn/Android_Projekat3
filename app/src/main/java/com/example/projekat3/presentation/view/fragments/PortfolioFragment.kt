@@ -43,6 +43,7 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
     private val binding get() = _binding!!
     private lateinit var adapter: PortfolioStockAdapter
 
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -126,7 +127,6 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
                 binding.userPortfolio.text = portfolioViewModel.user.value!!.portfolioValue.toString()
             }
         }
-
     }
 
     private fun initRecycler(){
@@ -149,8 +149,8 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
     fun startDetailedActivity(detailedStock: DetailedStock?) {
         val intent = Intent(activity, DetailedStockActivity::class.java)
         intent.putExtra("detailedStock", detailedStock)
-        intent.putExtra("numberOfOwned", 15)//todo ovaj broj povuci iz baze
-        intent.putExtra("balance", portfolioViewModel.user.value!!.balance)//todo ovaj broj povuci iz baze
+        intent.putExtra("numberOfOwned",getAmountOfClickedStock(detailedStock!!.name))//todo ovaj broj povuci iz baze
+        intent.putExtra("balance", portfolioViewModel.user.value!!.balance)
         doAction.launch(intent)
     }
 
@@ -160,14 +160,14 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
 
             val dateNow: Date = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant())
 
-            val numberOfBought = data?.getIntExtra("numberOfBought",0)
-            val balanceSpent = data?.getDoubleExtra("balanceSpent",0.0)
-            val name = data?.getStringExtra("name")
-            val symbol = data?.getStringExtra("symbol")
+            val numberOfBought = data!!.getIntExtra("numberOfBought",0)
+            val balanceSpent = data.getDoubleExtra("balanceSpent",0.0)
+            val name = data.getStringExtra("name")
+            val symbol = data.getStringExtra("symbol")
 
             //ako je buy onda cemo da na bazu dodamo + value
             //ako je sell na bazu dodajemo - value
-            if (name != null && symbol != null && numberOfBought != null && balanceSpent != null) {
+            if (name != null && symbol != null) {
                 portfolioViewModel.insertStock(
                     LocalStockEntity(
                         0,
@@ -204,6 +204,12 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
         when (state) {
             is PortfolioState.StockSuccessGrouped -> {
                 adapter.submitList(state.groupedStocks)
+
+                portfolioViewModel.amountOfOwned.clear()
+
+                state.groupedStocks.forEach {
+                    portfolioViewModel.amountOfOwned.add(it)
+                }
             }
             is PortfolioState.Error -> {
                 println("ERROR")
@@ -215,6 +221,13 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
                     .show()
             }
         }
+    }
+
+    private fun getAmountOfClickedStock(name: String): Int{
+        portfolioViewModel.amountOfOwned.forEach{
+            if (it.name == name) return it.sum
+        }
+        return 0
     }
 
     override fun onDestroyView() {

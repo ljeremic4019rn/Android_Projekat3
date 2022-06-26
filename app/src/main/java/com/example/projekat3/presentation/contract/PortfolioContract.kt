@@ -3,6 +3,7 @@ package com.example.projekat3.presentation.contract
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.projekat3.data.models.stocks.DetailedStock
+import com.example.projekat3.data.models.stocks.GroupedStock
 import com.example.projekat3.data.models.stocks.LocalStock
 import com.example.projekat3.data.models.stocks.LocalStockEntity
 import com.example.projekat3.data.models.user.User
@@ -15,6 +16,7 @@ interface PortfolioContract {
         val user: MutableLiveData<User>
         val detailedStock: DetailedStock?
         val userStocks: LiveData<List<LocalStock>>
+        val amountOfOwned: ArrayList<GroupedStock>
 
 
         fun getAllStocksFromUser(userId: Long)

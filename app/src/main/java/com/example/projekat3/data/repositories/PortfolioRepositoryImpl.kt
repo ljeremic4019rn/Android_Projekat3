@@ -8,6 +8,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Single
 
 class PortfolioRepositoryImpl(private val userDao: UserDao, private val stockDao: StockDao) :
     PortfolioRepository {
