@@ -1,4 +1,4 @@
-package com.example.projekat3.presentation.view.activities;
+package com.example.projekat3.presentation.view.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -14,10 +14,10 @@ class LoginActivity : AppCompatActivity() {
         const val PASSWORD = "12345"
     }
 
-    lateinit var usernameInput: EditText
-    lateinit var passwordInput: EditText
-    lateinit var emailInput: EditText
-    lateinit var loginButton: Button
+    private lateinit var usernameInput: EditText
+    private lateinit var passwordInput: EditText
+    private lateinit var emailInput: EditText
+    private lateinit var loginButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

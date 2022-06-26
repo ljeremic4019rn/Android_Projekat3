@@ -1,4 +1,4 @@
-package com.example.projekat3.presentation.view.activities;
+package com.example.projekat3.presentation.view.activities
 
 import android.os.Bundle
 import android.view.MenuItem

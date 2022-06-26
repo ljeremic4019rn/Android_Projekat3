@@ -33,7 +33,7 @@ class StocksViewHolder (private val itemBinding: StocksItemBinding, val openDeta
         itemBinding.chart1.isDragEnabled = true
 
         stock.chart.bars.forEach {
-            var value = it.price.toFloat()
+            val value = it.price.toFloat()
             ourLineChartEntries.add(Entry(i++.toFloat(), value))
         }
 

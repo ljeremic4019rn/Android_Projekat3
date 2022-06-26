@@ -8,7 +8,7 @@ import com.example.projekat3.R
 import com.example.projekat3.presentation.view.recycler.adapter.viewAdapters.TopNavPageAdapter
 import com.google.android.material.tabs.TabLayout
 
-class DiscoverFragment : Fragment(R.layout.fragment_discover){
+class DiscoverFragment : Fragment(R.layout.fragment_discover) {
 
     private lateinit var viewPager: ViewPager
     private lateinit var tabLayout: TabLayout
@@ -19,12 +19,7 @@ class DiscoverFragment : Fragment(R.layout.fragment_discover){
         initNavigation(view)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
-
-    private fun initNavigation(view: View){
+    private fun initNavigation(view: View) {
         viewPager = view.findViewById<View>(R.id.viewPagerTabs) as ViewPager
         viewPager.offscreenPageLimit = 10
         tabLayout = view.findViewById<View>(R.id.tabLayout) as TabLayout

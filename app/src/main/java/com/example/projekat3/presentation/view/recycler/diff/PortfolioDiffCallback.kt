@@ -2,7 +2,6 @@ package com.example.projekat3.presentation.view.recycler.diff
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.projekat3.data.models.stocks.GroupedStock
-import com.example.projekat3.data.models.stocks.LocalStock
 
 class PortfolioDiffCallback: DiffUtil.ItemCallback<GroupedStock>(){
 

@@ -2,7 +2,6 @@ package com.example.projekat3.presentation.view.recycler.viewHolder
 
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projekat3.data.models.stocks.GroupedStock
-import com.example.projekat3.data.models.stocks.LocalStock
 import com.example.projekat3.databinding.LocalStockItemBinding
 
 class PorftolioViewHolder (private val itemBinding: LocalStockItemBinding, val openDetailed: (position: Int) -> Unit) : RecyclerView.ViewHolder(itemBinding.root) {

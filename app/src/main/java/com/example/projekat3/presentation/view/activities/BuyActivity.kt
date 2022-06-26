@@ -18,15 +18,14 @@ import kotlin.properties.Delegates
 @SuppressLint("SetTextI18n")
 class BuyActivity : AppCompatActivity() {
 
-    lateinit var buyButton: Button
-    lateinit var stockBuySwitch: SwitchMaterial
-    lateinit var balance: TextView
-    lateinit var stockName: TextView
-    lateinit var number: EditText
-    lateinit var mode: TextView
-
-    lateinit var detailedStock: DetailedStock
-    var balanceValue by Delegates.notNull<Double>()
+    private  lateinit var buyButton: Button
+    private  lateinit var stockBuySwitch: SwitchMaterial
+    private  lateinit var balance: TextView
+    private  lateinit var stockName: TextView
+    private  lateinit var number: EditText
+    private  lateinit var mode: TextView
+    private lateinit var detailedStock: DetailedStock
+    private var balanceValue by Delegates.notNull<Double>()
     var last by Delegates.notNull<Double>()
 
 

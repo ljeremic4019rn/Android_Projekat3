@@ -22,23 +22,22 @@ import com.github.mikephil.charting.data.LineDataSet
 
 class DetailedStockActivity : AppCompatActivity() {
 
-    lateinit var buyButton: Button
-    lateinit var sellButton: Button
-    lateinit var stockSymbol: TextView
-    lateinit var stockValue: TextView
-    lateinit var chart: LineChart
-    lateinit var mktCap: TextView
-    lateinit var open: TextView
-    lateinit var bid: TextView
-    lateinit var close: TextView
-    lateinit var ask: TextView
-    lateinit var divYield: TextView
-    lateinit var pe: TextView
-    lateinit var eps: TextView
-    lateinit var ebit: TextView
-    lateinit var beta: TextView
-
-    lateinit var detailedStock: DetailedStock
+    private lateinit var buyButton: Button
+    private lateinit var sellButton: Button
+    private lateinit var stockSymbol: TextView
+    private lateinit var stockValue: TextView
+    private lateinit var chart: LineChart
+    private lateinit var mktCap: TextView
+    private lateinit var open: TextView
+    private lateinit var bid: TextView
+    private lateinit var close: TextView
+    private lateinit var ask: TextView
+    private lateinit var divYield: TextView
+    private lateinit var pe: TextView
+    private lateinit var eps: TextView
+    private lateinit var ebit: TextView
+    private lateinit var beta: TextView
+    private lateinit var detailedStock: DetailedStock
 
     private var balance = 0.0
 
@@ -121,7 +120,7 @@ class DetailedStockActivity : AppCompatActivity() {
         chart.invalidate()
     }
 
-    private fun setListeners() {//todo
+    private fun setListeners() {
         buyButton.setOnClickListener {
             startBuyActivity()
         }
@@ -132,7 +131,7 @@ class DetailedStockActivity : AppCompatActivity() {
     }
 
 
-    fun startSellActivity() {
+    private fun startSellActivity() {
         val intent = Intent(this, SellActivity::class.java)
         intent.putExtra("name", detailedStock.name)
         intent.putExtra("symbol", detailedStock.name)
@@ -158,7 +157,7 @@ class DetailedStockActivity : AppCompatActivity() {
     }
 
 
-    fun startBuyActivity() {
+    private fun startBuyActivity() {
         val intent = Intent(this, BuyActivity::class.java)
         intent.putExtra("detailedStock", detailedStock)
         intent.putExtra("balance", balance)

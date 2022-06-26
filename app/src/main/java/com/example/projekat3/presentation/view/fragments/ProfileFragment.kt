@@ -1,5 +1,6 @@
 package com.example.projekat3.presentation.view.fragments
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -11,14 +12,15 @@ import com.example.projekat3.R
 import com.example.projekat3.presentation.view.activities.LoginActivity
 
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
-    lateinit var usernameTextView: TextView
-    lateinit var logoutButton: Button
+    private lateinit var usernameTextView: TextView
+    private lateinit var logoutButton: Button
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        init(view);
+        init(view)
     }
 
+    @SuppressLint("SetTextI18n")
     private fun init(view: View) {
         val sharedPreferences =
             activity?.getSharedPreferences(activity?.packageName, AppCompatActivity.MODE_PRIVATE)

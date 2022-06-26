@@ -9,7 +9,6 @@ import com.example.projekat3.data.models.stocks.StockResponse
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import io.reactivex.Observable
-import io.reactivex.Single
 import java.util.concurrent.atomic.AtomicLong
 
 class StocksRepositoryImpl(private val remoteDataSource: StockService) : StocksRepository {

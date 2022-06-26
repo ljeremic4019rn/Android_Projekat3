@@ -3,11 +3,9 @@ package com.example.projekat3.data.repositories
 import com.example.projekat3.data.datasource.remote.NewsService
 import com.example.projekat3.data.models.news.News
 import com.example.projekat3.data.models.news.NewsResponse
-import com.example.projekat3.data.models.news.Resource
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import io.reactivex.Observable
-import timber.log.Timber
 import java.util.concurrent.atomic.AtomicLong
 
 class NewsRepositoryImpl(private val remoteDataSource: NewsService) : NewsRepository {

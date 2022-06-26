@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
@@ -21,7 +20,6 @@ import com.example.projekat3.presentation.view.recycler.adapter.NewsAdapter
 import com.example.projekat3.presentation.view.states.NewsState
 import com.example.projekat3.presentation.viewModel.NewsViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import timber.log.Timber
 import java.io.IOException
 import java.io.InputStream
 
@@ -68,9 +66,9 @@ class NewsFragment : Fragment(R.layout.fragment_news){
     }
 
     private fun initObservers() {
-        newsViewModel.newsState.observe(viewLifecycleOwner, Observer { newsState ->
+        newsViewModel.newsState.observe(viewLifecycleOwner) { newsState ->
             renderState(newsState)
-        })
+        }
         val myJson = activity?.resources?.openRawResource(R.raw.news)
             ?.let {
                 inputStreamToString(it)

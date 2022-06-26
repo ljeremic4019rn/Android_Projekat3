@@ -8,7 +8,6 @@ import com.example.projekat3.data.models.stocks.GroupedStock
 import com.example.projekat3.data.models.stocks.LocalStockEntity
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 
 @Dao
 abstract class StockDao {

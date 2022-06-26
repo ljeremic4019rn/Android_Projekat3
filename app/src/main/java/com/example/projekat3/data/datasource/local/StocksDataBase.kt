@@ -10,7 +10,7 @@ import com.example.projekat3.data.models.stocks.LocalStockEntity
     version = 1,
     exportSchema = false)
 
-@TypeConverters()
+@TypeConverters
 abstract class StocksDataBase : RoomDatabase(){
     abstract fun getStocksDao(): StockDao
 }

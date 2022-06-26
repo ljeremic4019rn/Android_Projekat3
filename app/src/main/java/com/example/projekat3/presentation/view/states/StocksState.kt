@@ -1,6 +1,5 @@
 package com.example.projekat3.presentation.view.states
 
-import com.example.projekat3.data.models.stocks.DetailedStock
 import com.example.projekat3.data.models.stocks.Stock
 
 sealed class StocksState {

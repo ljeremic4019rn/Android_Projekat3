@@ -11,7 +11,7 @@ import com.example.projekat3.data.models.user.UserEntity
     exportSchema = false
 )
 
-@TypeConverters()
+@TypeConverters
 abstract class UserDatabase : RoomDatabase() {
     abstract fun getUserDao(): UserDao
 }

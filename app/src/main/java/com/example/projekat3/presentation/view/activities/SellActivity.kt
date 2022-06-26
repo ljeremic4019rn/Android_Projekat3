@@ -12,11 +12,11 @@ import kotlin.properties.Delegates
 @SuppressLint("UseSwitchCompatOrMaterialCode")
 class SellActivity : AppCompatActivity(){
 
-    lateinit var stockName: TextView
-    lateinit var stockSellSwitch: Switch
-    lateinit var stockAmountToSell: EditText
-    lateinit var sellButton: Button
-    var numberOfOwned by Delegates.notNull<Int>()
+    private lateinit var stockName: TextView
+    private lateinit var stockSellSwitch: Switch
+    private lateinit var stockAmountToSell: EditText
+    private lateinit var sellButton: Button
+    private var numberOfOwned by Delegates.notNull<Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -3,7 +3,6 @@ package com.example.projekat3.presentation.view.recycler.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import com.example.projekat3.data.models.news.News
 import com.example.projekat3.data.models.stocks.Stock
 import com.example.projekat3.databinding.StocksItemBinding
 import com.example.projekat3.presentation.view.recycler.diff.StocksDiffCallback

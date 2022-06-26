@@ -9,9 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
@@ -21,13 +19,13 @@ import com.example.projekat3.data.models.stocks.DetailedStock
 import com.example.projekat3.data.models.stocks.LocalStockEntity
 import com.example.projekat3.data.models.stocks.Stock
 import com.example.projekat3.databinding.FragmentStocksBinding
-import com.example.projekat3.presentation.contract.StocksContract
 import com.example.projekat3.presentation.contract.PortfolioContract
+import com.example.projekat3.presentation.contract.StocksContract
 import com.example.projekat3.presentation.view.activities.DetailedStockActivity
 import com.example.projekat3.presentation.view.recycler.adapter.StocksAdapter
 import com.example.projekat3.presentation.view.states.StocksState
-import com.example.projekat3.presentation.viewModel.StocksViewModel
 import com.example.projekat3.presentation.viewModel.PortfolioViewModel
+import com.example.projekat3.presentation.viewModel.StocksViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.io.IOException
 import java.io.InputStream
@@ -65,9 +63,9 @@ class StocksFragment : Fragment(R.layout.fragment_stocks){
     }
 
     private fun initObservers() {
-        stockViewModel.stockState.observe(viewLifecycleOwner, Observer { stockState ->
+        stockViewModel.stockState.observe(viewLifecycleOwner) { stockState ->
             renderState(stockState)
-        })
+        }
         val myJson = activity?.resources?.openRawResource(R.raw.indexes)
             ?.let { inputStreamToString(it) }
         if (myJson != null) {
@@ -95,7 +93,7 @@ class StocksFragment : Fragment(R.layout.fragment_stocks){
         }
     }
 
-    fun startDetailedActivity(detailedStock: DetailedStock?) {
+    private fun startDetailedActivity(detailedStock: DetailedStock?) {
         val intent = Intent(activity, DetailedStockActivity::class.java)
         intent.putExtra("detailedStock", detailedStock)
         intent.putExtra("numberOfOwned",getAmountOfClickedStock(detailedStock!!.name))//todo ovaj broj povuci iz baze

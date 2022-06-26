@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import com.example.projekat3.data.models.stocks.DetailedStock
 import com.example.projekat3.data.repositories.StocksRepository
 import com.example.projekat3.presentation.contract.StocksContract
-import com.example.projekat3.presentation.view.states.NewsState
 import com.example.projekat3.presentation.view.states.StocksState
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
