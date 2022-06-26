@@ -3,23 +3,17 @@ package com.example.projekat3.data.repositories
 import com.example.projekat3.data.datasource.local.StockDao
 import com.example.projekat3.data.datasource.local.UserDao
 import com.example.projekat3.data.models.stocks.*
-import com.example.projekat3.data.models.user.User
 import com.example.projekat3.data.models.user.UserEntity
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 
-class UserRepositoryImpl(private val userDao: UserDao, private val stockDao: StockDao) :
-    UserRepository {
+class PortfolioRepositoryImpl(private val userDao: UserDao, private val stockDao: StockDao) :
+    PortfolioRepository {
 
 
-    override fun getUserByNameMailPass(
-        username: String,
-        email: String,
-        password: String
-    ): Observable<UserEntity> {
+    override fun getUserByNameMailPass(username: String,email: String,password: String): Observable<UserEntity> {
         return userDao.getUserByUsernameEmailPass(username, email, password)
     }
 
@@ -49,6 +43,11 @@ class UserRepositoryImpl(private val userDao: UserDao, private val stockDao: Sto
 
     override fun getAllStocksFromUserGrouped(userId: Long): Observable<List<GroupedStock>> {
         return stockDao.getAllStocksFromUserGrouped(userId)
+    }
+
+    override fun updateUserBalance(userId: Long, balance: Double, portfolioValue: Double): Completable {
+
+        return userDao.updateUserBalance(userId, balance, portfolioValue)
     }
 
     override fun searchStock(json: String): DetailedStock {

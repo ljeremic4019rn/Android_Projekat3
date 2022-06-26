@@ -2,17 +2,17 @@ package com.example.projekat3.moduls
 
 import com.example.projekat3.data.datasource.local.StocksDataBase
 import com.example.projekat3.data.datasource.local.UserDatabase
-import com.example.projekat3.data.repositories.UserRepository
-import com.example.projekat3.data.repositories.UserRepositoryImpl
+import com.example.projekat3.data.repositories.PortfolioRepository
+import com.example.projekat3.data.repositories.PortfolioRepositoryImpl
 import com.example.projekat3.presentation.viewModel.PortfolioViewModel
 import org.koin.dsl.module
 import org.koin.androidx.viewmodel.dsl.viewModel
 
 val userModule = module {
 
-    viewModel { PortfolioViewModel(userRepository = get()) }
+    viewModel { PortfolioViewModel(portfolioRepository = get()) }
 
-    single<UserRepository> { UserRepositoryImpl (userDao = get(), stockDao = get()) }
+    single<PortfolioRepository> { PortfolioRepositoryImpl (userDao = get(), stockDao = get()) }
 
     single { get<UserDatabase>().getUserDao() }
 

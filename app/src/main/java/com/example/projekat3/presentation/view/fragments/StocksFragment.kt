@@ -22,7 +22,7 @@ import com.example.projekat3.data.models.stocks.LocalStockEntity
 import com.example.projekat3.data.models.stocks.Stock
 import com.example.projekat3.databinding.FragmentStocksBinding
 import com.example.projekat3.presentation.contract.StocksContract
-import com.example.projekat3.presentation.contract.UserContract
+import com.example.projekat3.presentation.contract.PortfolioContract
 import com.example.projekat3.presentation.view.activities.DetailedStockActivity
 import com.example.projekat3.presentation.view.recycler.adapter.StocksAdapter
 import com.example.projekat3.presentation.view.states.StocksState
@@ -38,7 +38,7 @@ import java.util.*
 class StocksFragment : Fragment(R.layout.fragment_stocks){
 
     private val stockViewModel: StocksContract.ViewModel by sharedViewModel<StocksViewModel>()
-    private val userViewModel: UserContract.ViewModel by sharedViewModel<PortfolioViewModel>()
+    private val portfolioViewModel: PortfolioContract.ViewModel by sharedViewModel<PortfolioViewModel>()
 
     private var _binding: FragmentStocksBinding? = null
     private val binding get() = _binding!!
@@ -62,20 +62,6 @@ class StocksFragment : Fragment(R.layout.fragment_stocks){
     private fun init() {
         initRecycler()
         initObservers()
-        loadUser()
-    }
-
-    private fun loadUser(){//todo ovo proveri kasnije
-        val sharedPreferences = activity?.getSharedPreferences(activity?.packageName, AppCompatActivity.MODE_PRIVATE)
-
-        val username = sharedPreferences?.getString("username", "")
-        val email = sharedPreferences?.getString("email", "")
-        val password = sharedPreferences?.getString("password", "")
-
-
-
-        if (username != null && email != null && password != null)
-            userViewModel.getUserByNameMailPass(username, email, password)
     }
 
     private fun initObservers() {
@@ -113,7 +99,7 @@ class StocksFragment : Fragment(R.layout.fragment_stocks){
         val intent = Intent(activity, DetailedStockActivity::class.java)
         intent.putExtra("detailedStock", detailedStock)
         intent.putExtra("numberOfOwned", 15)//todo ovaj broj povuci iz baze
-        intent.putExtra("balance", userViewModel.user.balance)//todo ovaj broj povuci iz baze
+        intent.putExtra("balance", portfolioViewModel.user.value!!.balance)//todo ovaj broj povuci iz baze
         doAction.launch(intent)
     }
 
@@ -131,10 +117,10 @@ class StocksFragment : Fragment(R.layout.fragment_stocks){
             //ako je buy onda cemo da na bazu dodamo + value
             //ako je sell na bazu dodajemo - value
             if (name != null && symbol != null && numberOfBought != null && balanceSpent != null) {
-                userViewModel.insertStock(
+                portfolioViewModel.insertStock(
                     LocalStockEntity(
                         0,
-                        userViewModel.user.id,
+                        portfolioViewModel.user.value!!.id,
                         name,
                         numberOfBought,
                         symbol,
@@ -142,8 +128,13 @@ class StocksFragment : Fragment(R.layout.fragment_stocks){
                         balanceSpent
                     )
                 )
-                userViewModel.user.balance += balanceSpent//todo ovo treba da ide u bazu a ne u lokalnu varijablu, uradi stura
-                userViewModel.user.portfolioValue += balanceSpent//todo balance na bazi
+                portfolioViewModel.user.value!!.balance += balanceSpent
+                portfolioViewModel.user.value!!.portfolioValue += balanceSpent * -1
+
+                portfolioViewModel.updateUserBalance(
+                    portfolioViewModel.user.value!!.id,
+                    portfolioViewModel.user.value!!.balance,
+                    portfolioViewModel.user.value!!.portfolioValue )
             }
         }
     }

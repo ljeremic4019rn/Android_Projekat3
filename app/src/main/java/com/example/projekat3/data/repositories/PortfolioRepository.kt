@@ -10,12 +10,13 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 
-interface UserRepository {
+interface PortfolioRepository {
     fun getUserByNameMailPass(username: String, email: String, password: String): Observable<UserEntity>
     fun insertUser(user: UserEntity): Completable
 
     fun insertStock(localStockEntity: LocalStockEntity): Completable
     fun getAllStocksFromUser(userId: Long): Observable<List<LocalStock>>
     fun getAllStocksFromUserGrouped(userId: Long): Observable<List<GroupedStock>>
+    fun updateUserBalance (userId: Long, balance: Double, portfolioValue: Double): Completable
     fun searchStock (json: String): DetailedStock
 }

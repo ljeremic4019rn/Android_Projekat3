@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.mikephil.charting.data.Entry
@@ -21,7 +22,7 @@ import com.example.projekat3.R
 import com.example.projekat3.data.models.stocks.DetailedStock
 import com.example.projekat3.data.models.stocks.LocalStockEntity
 import com.example.projekat3.databinding.FragmentPortfolioBinding
-import com.example.projekat3.presentation.contract.UserContract
+import com.example.projekat3.presentation.contract.PortfolioContract
 import com.example.projekat3.presentation.view.activities.DetailedStockActivity
 import com.example.projekat3.presentation.view.recycler.adapter.PortfolioStockAdapter
 import com.example.projekat3.presentation.view.states.PortfolioState
@@ -31,14 +32,13 @@ import java.io.InputStream
 import java.time.LocalDate
 import java.time.ZoneId
 import kotlin.collections.ArrayList
-import androidx.lifecycle.Observer
 import com.example.projekat3.data.models.stocks.GroupedStock
 import java.util.*
 
 
 class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
 
-    private val userViewModel: UserContract.ViewModel by sharedViewModel<PortfolioViewModel>()
+    private val portfolioViewModel: PortfolioContract.ViewModel by sharedViewModel<PortfolioViewModel>()
     private var _binding: FragmentPortfolioBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: PortfolioStockAdapter
@@ -61,6 +61,7 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
         initView()
         initRecycler()
         initObservers()
+        loadUser()
     }
 
     private fun initView(){
@@ -70,28 +71,62 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
         binding.porfolioChart.isDragEnabled = true
         binding.porfolioChart.setScaleEnabled(true)
         binding.porfolioChart.setPinchZoom(true)
+}
+
+
+
+    private fun loadUser(){//todo ako je nov dodaj ga u bazu
+        val sharedPreferences = activity?.getSharedPreferences(activity?.packageName, AppCompatActivity.MODE_PRIVATE)
+
+        val username = sharedPreferences?.getString("username", "").toString()
+        val email = sharedPreferences?.getString("email", "").toString()
+        val password = sharedPreferences?.getString("password", "").toString()
+
+        portfolioViewModel.getUserByNameMailPass(username, email, password)
+    }
+
+
+    private fun initObservers() {
+        portfolioViewModel.portfolioState.observe(viewLifecycleOwner) { newsState ->
+            renderState(newsState)
+        }
+
+        portfolioViewModel.user.observe(viewLifecycleOwner) {
+            if (portfolioViewModel.user.value?.id == 0L) Toast.makeText(context, "Please login as existing user", Toast.LENGTH_SHORT).show()
+
+            portfolioViewModel.getAllStocksFromUserGrouped(portfolioViewModel.user.value!!.id)
+            binding.userBalance.text = portfolioViewModel.user.value!!.balance.toString()
+            binding.userPortfolio.text = portfolioViewModel.user.value!!.portfolioValue.toString()
+        }
 
         val ourLineChartEntries: ArrayList<Entry> = ArrayList()
         var i = 0
+        var initialPortfolio = 0.0
 
-        userViewModel.list.forEach {
-            var value = it.value
-            ourLineChartEntries.add(Entry(i++.toFloat(), value.toFloat() * -1))
+        portfolioViewModel.userStocks.observe(viewLifecycleOwner) {
+            ourLineChartEntries.clear()
+            binding.porfolioChart.invalidate()
+            binding.porfolioChart.clear()
+            println(portfolioViewModel.userStocks.value)
+            portfolioViewModel.userStocks.value?.forEach {
+                val value = it.value
+                initialPortfolio += value * -1
+
+                ourLineChartEntries.add(Entry(i++.toFloat(), initialPortfolio.toFloat()))
+
+                val lineDataSet = LineDataSet(ourLineChartEntries, "")
+                lineDataSet.color = Color.BLACK
+                val data = LineData(lineDataSet)
+                binding.porfolioChart.data = data
+                binding.porfolioChart.invalidate()
+            }
+
+            if (portfolioViewModel.user.value?.id == 0L) {
+                binding.userBalance.text = portfolioViewModel.user.value!!.balance.toString()
+                binding.userPortfolio.text = portfolioViewModel.user.value!!.portfolioValue.toString()
+            }
         }
 
-        val lineDataSet = LineDataSet(ourLineChartEntries, "")
-        lineDataSet.color = Color.BLACK
-        val data = LineData(lineDataSet)
-        binding.porfolioChart.data = data
-        binding.porfolioChart.invalidate()
-}
-
-    private fun initObservers() {
-        userViewModel.portfolioState.observe(viewLifecycleOwner, Observer { newsState ->
-            renderState(newsState)
-        })
-//        userViewModel.getAllStocksFromUser(userViewModel.user.id)
-        userViewModel.getAllStocksFromUserGrouped(1)
     }
 
     private fun initRecycler(){
@@ -106,8 +141,8 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
         val myJson = activity?.resources?.openRawResource(R.raw.search_quote)
             ?.let { inputStreamToString(it) }
         if (myJson != null) {
-            userViewModel.searchStock(myJson)
-            startDetailedActivity(userViewModel.detailedStock)
+            portfolioViewModel.searchStock(myJson)
+            startDetailedActivity(portfolioViewModel.detailedStock)
         }
     }
 
@@ -115,7 +150,7 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
         val intent = Intent(activity, DetailedStockActivity::class.java)
         intent.putExtra("detailedStock", detailedStock)
         intent.putExtra("numberOfOwned", 15)//todo ovaj broj povuci iz baze
-        intent.putExtra("balance", userViewModel.user.balance)//todo ovaj broj povuci iz baze
+        intent.putExtra("balance", portfolioViewModel.user.value!!.balance)//todo ovaj broj povuci iz baze
         doAction.launch(intent)
     }
 
@@ -133,10 +168,10 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
             //ako je buy onda cemo da na bazu dodamo + value
             //ako je sell na bazu dodajemo - value
             if (name != null && symbol != null && numberOfBought != null && balanceSpent != null) {
-                userViewModel.insertStock(
+                portfolioViewModel.insertStock(
                     LocalStockEntity(
                         0,
-                        userViewModel.user.id,
+                        portfolioViewModel.user.value!!.id,
                         name,
                         numberOfBought,
                         symbol,
@@ -144,8 +179,13 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
                         balanceSpent
                     )
                 )
-                userViewModel.user.balance += balanceSpent//todo ovo treba da ide u bazu a ne u lokalnu varijablu, uradi stura
-                userViewModel.user.portfolioValue += balanceSpent//todo balance na bazi
+                portfolioViewModel.user.value!!.balance += balanceSpent
+                portfolioViewModel.user.value!!.portfolioValue += balanceSpent * -1
+
+                portfolioViewModel.updateUserBalance(
+                    portfolioViewModel.user.value!!.id,
+                    portfolioViewModel.user.value!!.balance,
+                    portfolioViewModel.user.value!!.portfolioValue )
             }
         }
     }
