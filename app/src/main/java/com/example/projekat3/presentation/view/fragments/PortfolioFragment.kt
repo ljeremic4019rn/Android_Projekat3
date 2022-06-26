@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -18,27 +19,29 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import androidx.fragment.app.Fragment
 import com.example.projekat3.R
 import com.example.projekat3.data.models.stocks.DetailedStock
-import com.example.projekat3.data.models.stocks.LocalStock
 import com.example.projekat3.data.models.stocks.LocalStockEntity
 import com.example.projekat3.databinding.FragmentPortfolioBinding
 import com.example.projekat3.presentation.contract.UserContract
 import com.example.projekat3.presentation.view.activities.DetailedStockActivity
-import com.example.projekat3.presentation.view.recycler.adapter.LocalStockAdapter
-import com.example.projekat3.presentation.viewModel.UserViewModel
+import com.example.projekat3.presentation.view.recycler.adapter.PortfolioStockAdapter
+import com.example.projekat3.presentation.view.states.PortfolioState
+import com.example.projekat3.presentation.viewModel.PortfolioViewModel
 import java.io.IOException
 import java.io.InputStream
 import java.time.LocalDate
 import java.time.ZoneId
-import java.util.*
 import kotlin.collections.ArrayList
+import androidx.lifecycle.Observer
+import com.example.projekat3.data.models.stocks.GroupedStock
+import java.util.*
 
 
 class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
 
-    private val userViewModel: UserContract.ViewModel by sharedViewModel<UserViewModel>()
+    private val userViewModel: UserContract.ViewModel by sharedViewModel<PortfolioViewModel>()
     private var _binding: FragmentPortfolioBinding? = null
     private val binding get() = _binding!!
-    private lateinit var adapter: LocalStockAdapter
+    private lateinit var adapter: PortfolioStockAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,14 +54,16 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initRecycler()
+        init()
+    }
+
+    private fun init() {
         initView()
+        initRecycler()
+        initObservers()
     }
 
     private fun initView(){
-        binding.userBalance
-        binding.userPortfolio
-        binding.porfolioChart
         binding.porfolioChart.setBackgroundColor(Color.WHITE)
         binding.porfolioChart.description.isEnabled = false
         binding.porfolioChart.setDrawGridBackground(false)
@@ -69,23 +74,35 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
         val ourLineChartEntries: ArrayList<Entry> = ArrayList()
         var i = 0
 
+        userViewModel.list.forEach {
+            var value = it.value
+            ourLineChartEntries.add(Entry(i++.toFloat(), value.toFloat() * -1))
+        }
+
         val lineDataSet = LineDataSet(ourLineChartEntries, "")
         lineDataSet.color = Color.BLACK
         val data = LineData(lineDataSet)
         binding.porfolioChart.data = data
         binding.porfolioChart.invalidate()
+}
+
+    private fun initObservers() {
+        userViewModel.portfolioState.observe(viewLifecycleOwner, Observer { newsState ->
+            renderState(newsState)
+        })
+//        userViewModel.getAllStocksFromUser(userViewModel.user.id)
+        userViewModel.getAllStocksFromUserGrouped(1)
     }
 
     private fun initRecycler(){
-        adapter = LocalStockAdapter(::openDetailed)
+        adapter = PortfolioStockAdapter(::openDetailed)
         binding.userStocksRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL,false)
         binding.userStocksRv.addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL))
         binding.userStocksRv.adapter = adapter
-        adapter.submitList(userViewModel.list)
     }
 
 
-    private fun openDetailed(localStock: LocalStock){
+    private fun openDetailed(localStock: GroupedStock){
         val myJson = activity?.resources?.openRawResource(R.raw.search_quote)
             ?.let { inputStreamToString(it) }
         if (myJson != null) {
@@ -140,6 +157,23 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
             String(bytes)
         } catch (e: IOException) {
             null
+        }
+    }
+
+    private fun renderState(state: PortfolioState) {
+        when (state) {
+            is PortfolioState.StockSuccessGrouped -> {
+                adapter.submitList(state.groupedStocks)
+            }
+            is PortfolioState.Error -> {
+                println("ERROR")
+
+                Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
+            }
+            is PortfolioState.DataFetched -> {
+                Toast.makeText(context, "Fresh data fetched from the server", Toast.LENGTH_LONG)
+                    .show()
+            }
         }
     }
 

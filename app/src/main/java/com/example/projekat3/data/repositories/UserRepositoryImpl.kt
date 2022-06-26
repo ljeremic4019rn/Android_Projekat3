@@ -2,10 +2,7 @@ package com.example.projekat3.data.repositories
 
 import com.example.projekat3.data.datasource.local.StockDao
 import com.example.projekat3.data.datasource.local.UserDao
-import com.example.projekat3.data.models.stocks.DetailedStock
-import com.example.projekat3.data.models.stocks.DetailedStockResponse
-import com.example.projekat3.data.models.stocks.LocalStock
-import com.example.projekat3.data.models.stocks.LocalStockEntity
+import com.example.projekat3.data.models.stocks.*
 import com.example.projekat3.data.models.user.User
 import com.example.projekat3.data.models.user.UserEntity
 import com.google.gson.Gson
@@ -14,12 +11,15 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 
-class UserRepositoryImpl (private val userDao: UserDao, private val stockDao: StockDao) : UserRepository {
+class UserRepositoryImpl(private val userDao: UserDao, private val stockDao: StockDao) :
+    UserRepository {
 
 
-
-
-    override fun getUserByNameMailPass(username: String, email: String,password: String): Observable<UserEntity> {
+    override fun getUserByNameMailPass(
+        username: String,
+        email: String,
+        password: String
+    ): Observable<UserEntity> {
         return userDao.getUserByUsernameEmailPass(username, email, password)
     }
 
@@ -29,9 +29,7 @@ class UserRepositoryImpl (private val userDao: UserDao, private val stockDao: St
     }
 
 
-
     override fun getAllStocksFromUser(userId: Long): Observable<List<LocalStock>> {
-
         return stockDao
             .getAllStocksFromUser(userId)
             .map { it ->
@@ -47,6 +45,10 @@ class UserRepositoryImpl (private val userDao: UserDao, private val stockDao: St
                     )
                 }
             }
+    }
+
+    override fun getAllStocksFromUserGrouped(userId: Long): Observable<List<GroupedStock>> {
+        return stockDao.getAllStocksFromUserGrouped(userId)
     }
 
     override fun searchStock(json: String): DetailedStock {

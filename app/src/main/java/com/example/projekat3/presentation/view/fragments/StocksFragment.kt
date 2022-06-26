@@ -27,7 +27,7 @@ import com.example.projekat3.presentation.view.activities.DetailedStockActivity
 import com.example.projekat3.presentation.view.recycler.adapter.StocksAdapter
 import com.example.projekat3.presentation.view.states.StocksState
 import com.example.projekat3.presentation.viewModel.StocksViewModel
-import com.example.projekat3.presentation.viewModel.UserViewModel
+import com.example.projekat3.presentation.viewModel.PortfolioViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.io.IOException
 import java.io.InputStream
@@ -38,7 +38,7 @@ import java.util.*
 class StocksFragment : Fragment(R.layout.fragment_stocks){
 
     private val stockViewModel: StocksContract.ViewModel by sharedViewModel<StocksViewModel>()
-    private val userViewModel: UserContract.ViewModel by sharedViewModel<UserViewModel>()
+    private val userViewModel: UserContract.ViewModel by sharedViewModel<PortfolioViewModel>()
 
     private var _binding: FragmentStocksBinding? = null
     private val binding get() = _binding!!
@@ -69,8 +69,10 @@ class StocksFragment : Fragment(R.layout.fragment_stocks){
         val sharedPreferences = activity?.getSharedPreferences(activity?.packageName, AppCompatActivity.MODE_PRIVATE)
 
         val username = sharedPreferences?.getString("username", "")
-        val email = sharedPreferences?.getString("username", "")
-        val password = sharedPreferences?.getString("username", "")
+        val email = sharedPreferences?.getString("email", "")
+        val password = sharedPreferences?.getString("password", "")
+
+
 
         if (username != null && email != null && password != null)
             userViewModel.getUserByNameMailPass(username, email, password)
@@ -140,13 +142,9 @@ class StocksFragment : Fragment(R.layout.fragment_stocks){
                         balanceSpent
                     )
                 )
-
                 userViewModel.user.balance += balanceSpent//todo ovo treba da ide u bazu a ne u lokalnu varijablu, uradi stura
                 userViewModel.user.portfolioValue += balanceSpent//todo balance na bazi
-
             }
-
-
         }
     }
 

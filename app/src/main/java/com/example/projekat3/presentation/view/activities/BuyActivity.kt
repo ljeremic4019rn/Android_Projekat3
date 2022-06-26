@@ -58,7 +58,7 @@ class BuyActivity : AppCompatActivity() {
         stockName.text = detailedStock.name
         balance.text = balanceValue.toString()
         number.hint = "0"
-        mode.text = "Input number of stock"
+        mode.text = "Input balance amount"
     }
 
     private fun setListeners() {

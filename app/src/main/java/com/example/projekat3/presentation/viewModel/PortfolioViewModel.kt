@@ -9,36 +9,39 @@ import com.example.projekat3.data.models.user.User
 import com.example.projekat3.data.models.user.UserEntity
 import com.example.projekat3.data.repositories.UserRepository
 import com.example.projekat3.presentation.contract.UserContract
-import com.example.projekat3.presentation.view.states.UserState
-import io.reactivex.Completable
-import io.reactivex.Observable
+import com.example.projekat3.presentation.view.states.PortfolioState
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
-class UserViewModel(private val userRepository: UserRepository) : ViewModel(), UserContract.ViewModel {
+class PortfolioViewModel(private val userRepository: UserRepository) : ViewModel(), UserContract.ViewModel {
 
     private val subscriptions = CompositeDisposable()
-    override val userState: MutableLiveData<UserState> = MutableLiveData()
+    override val portfolioState: MutableLiveData<PortfolioState> = MutableLiveData()
 
-    override var user: User = User(0, "username", "email@email.com", "password", 10000.0, 0.0)
+    override var user: User = User(0, "XX", "XX", "XX", 0.0, 0.0)
     override var detailedStock: DetailedStock? = null
 
-    init {
+    init {//todo ovo je cisto da bi se baza otkljucala i mogli da vidimo sta je upisano - obrisi
         getUserByNameMailPass("username","asd@gmail.com","password")
-        println("user")
-        println(user.toString())
+        getAllStocksFromUser(1)
+
     }
 
 
-
-    override val list = arrayListOf(//todo ovo promeni
-        LocalStock(0, 0, "name", 1, "a", "01/01/2001", 20.5),
-        LocalStock(0, 1, "name1",5, "b", "01/01/2001", 25.5),
-        LocalStock(0, 1, "name2",6, "c", "01/01/2001", 22.5),
-        LocalStock(0, 2, "name3",9, "d", "01/01/2001", 27.5),
-        LocalStock(0, 2, "name4",3, "e", "01/01/2001", 28.5)
+    override val list = arrayListOf(
+//todo ovo promeni
+        LocalStock(0, 0, "AT&T, Inc.", -10, "T", "01/01/2001", 193.8),
+        LocalStock(0, 0, "AT&T, Inc.", 10, "T", "01/02/2001", -193.8),
+        LocalStock(0, 0, "AT&T, Inc.", 10, "T", "01/03/2001", -193.8),
+        LocalStock(0, 0, "AT&T, Inc.", 51, "T", "01/04/2001", -988.38),
+        LocalStock(0, 0, "AT&T, Inc.", -1, "T", "01/05/2001", 19.38),
+        LocalStock(0, 0, "AT&T, Inc.", 5, "T", "01/06/2001", -96.9),
+        LocalStock(0, 0, "AT&T, Inc.", 5, "T", "01/07/2001", -96.9),
+        LocalStock(0, 0, "AT&T, Inc.", -10, "T", "01/08/2001", -193.8),
+        LocalStock(0, 0, "AT&T, Inc.", 100, "T", "01/09/2001", -1938.0),
+        LocalStock(0, 0, "AT&T, Inc.", 10, "T", "01/10/2001", -193.8),
     )
 
 
@@ -48,7 +51,7 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel(), U
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                {
+                {//todo ako je nepostojeci user, vuce prvog iz baze, popravi / modifikuj ovo da radi pravilno
                     user = User(it.id, it.username, it.email, it.password, it.balance, it.portfolioValue)
                 },
                 {
@@ -59,11 +62,9 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel(), U
     }
 
 
-
-
-    override fun insertUser(userEntity: UserEntity) {
+    override fun insertUser(user: UserEntity) {
         val subscription = userRepository
-            .insertUser(userEntity)
+            .insertUser(user)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -76,6 +77,7 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel(), U
             )
         subscriptions.add(subscription)
     }
+
     override fun getAllStocksFromUser(userId: Long){
         val subscription = userRepository
             .getAllStocksFromUser(userId)
@@ -83,17 +85,38 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel(), U
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    userState.value = UserState.StockSuccess(it)
+                    portfolioState.value = PortfolioState.StockSuccess(it)
                 },
                 {
-                    userState.value = UserState.Error("Error happened while fetching data from db")
+                    portfolioState.value = PortfolioState.Error("Error happened while fetching data from db")
                     Timber.e(it)
                 },
                 {
                     Timber.e("ON COMPLETE")
                 }
             )
-        subscriptions.add(subscription)    }
+        subscriptions.add(subscription)
+    }
+
+    override fun getAllStocksFromUserGrouped(userId: Long) {
+        val subscription = userRepository
+            .getAllStocksFromUserGrouped(userId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    portfolioState.value = PortfolioState.StockSuccessGrouped(it)
+                },
+                {
+                    portfolioState.value = PortfolioState.Error("Error happened while fetching data from db")
+                    Timber.e(it)
+                },
+                {
+                    Timber.e("ON COMPLETE")
+                }
+            )
+        subscriptions.add(subscription)
+    }
 
     override fun insertStock(localStockEntity: LocalStockEntity) {
         val subscription = userRepository
