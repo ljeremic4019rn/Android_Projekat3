@@ -62,9 +62,9 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
 
     private fun init() {
         initView()
+        loadUser()
         initRecycler()
         initObservers()
-        loadUser()
     }
 
     private fun initView(){
@@ -78,7 +78,7 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
 
 
 
-    private fun loadUser(){//todo ako je nov dodaj ga u bazu
+    private fun loadUser(){
         val sharedPreferences = activity?.getSharedPreferences(activity?.packageName, AppCompatActivity.MODE_PRIVATE)
 
         val mode = sharedPreferences?.getString("mode", "").toString()
@@ -104,8 +104,8 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
         portfolioViewModel.user.observe(viewLifecycleOwner) {
             if (portfolioViewModel.user.value?.id == 0L) Toast.makeText(context, "Please login as existing user", Toast.LENGTH_SHORT).show()
 
-            println("USERRRRR")
-            println(portfolioViewModel.user.value.toString())
+//            println("USERRRRR")
+//            println(portfolioViewModel.user.value.toString())
 
             portfolioViewModel.getAllStocksFromUserGrouped(portfolioViewModel.user.value!!.id)
             binding.userBalance.text = portfolioViewModel.user.value!!.balance.toString()
@@ -120,7 +120,11 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
             ourLineChartEntries.clear()
             binding.porfolioChart.invalidate()
             binding.porfolioChart.clear()
+
+            println("valueeeee")
             println(portfolioViewModel.userStocks.value)
+
+
             portfolioViewModel.userStocks.value?.forEach {
                 val value = it.value
                 initialPortfolio += value * -1
@@ -161,7 +165,7 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
     fun startDetailedActivity(detailedStock: DetailedStock?) {
         val intent = Intent(activity, DetailedStockActivity::class.java)
         intent.putExtra("detailedStock", detailedStock)
-        intent.putExtra("numberOfOwned",getAmountOfClickedStock(detailedStock!!.name))//todo ovaj broj povuci iz baze
+        intent.putExtra("numberOfOwned",getAmountOfClickedStock(detailedStock!!.name))
         intent.putExtra("balance", portfolioViewModel.user.value!!.balance)
         doAction.launch(intent)
     }
@@ -202,7 +206,7 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
         }
     }
 
-    private fun inputStreamToString(inputStream: InputStream): String? {//za citanje json
+    private fun inputStreamToString(inputStream: InputStream): String? {//za citanje json-a
         return try {
             val bytes = ByteArray(inputStream.available())
             inputStream.read(bytes, 0, bytes.size)

@@ -40,6 +40,7 @@ class PortfolioViewModel(private val portfolioRepository: PortfolioRepository) :
             .subscribe(
                 {
                     user.value = User(it.id, it.username, it.email, it.password, it.balance, it.portfolioValue)
+                    getAllStocksFromUser(it.id)
                 },
                 {
                     Timber.e(it)

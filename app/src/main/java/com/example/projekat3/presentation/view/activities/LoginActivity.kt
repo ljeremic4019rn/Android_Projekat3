@@ -10,10 +10,6 @@ import com.example.projekat3.R
 
 class LoginActivity : AppCompatActivity() {
 
-    companion object {
-        const val PASSWORD = "12345"
-    }
-
     private lateinit var usernameInput: EditText
     private lateinit var passwordInput: EditText
     private lateinit var emailInput: EditText

@@ -17,9 +17,7 @@ class NewsViewHolder (private val itemBinding: NewsItemBinding, val openLink: (p
 
     fun bind(news: News){
         itemBinding.titleTv.text = news.title
-        val parsedDate = LocalDateTime.parse(news.date, DateTimeFormatter.ISO_DATE_TIME)
-        val formattedDate = parsedDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))
-        itemBinding.dateTv.text = formattedDate
+        itemBinding.dateTv.text = news.date.split("T")[0]
         Picasso
             .get()
             .load(news.image)
