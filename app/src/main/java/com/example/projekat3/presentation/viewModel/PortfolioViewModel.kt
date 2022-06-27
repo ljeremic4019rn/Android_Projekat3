@@ -25,6 +25,7 @@ class PortfolioViewModel(private val portfolioRepository: PortfolioRepository) :
     override val amountOfOwned: ArrayList<GroupedStock> = arrayListOf()
 
 
+
     init {//todo ovo je cisto da bi se baza otkljucala i mogli da vidimo sta je upisano - obrisi
         getUserByNameMailPass("username","asd@gmail.com","password")
         getAllStocksFromUser(1)
@@ -39,15 +40,12 @@ class PortfolioViewModel(private val portfolioRepository: PortfolioRepository) :
             .subscribe(
                 {
                     user.value = User(it.id, it.username, it.email, it.password, it.balance, it.portfolioValue)
-
-
                 },
                 {
                     Timber.e(it)
                 }
             )
         subscriptions.add(subscription)
-
 
     }
 
@@ -60,6 +58,7 @@ class PortfolioViewModel(private val portfolioRepository: PortfolioRepository) :
             .subscribe(
                 {
                     Timber.e("COMPLETE")
+                    getUserByNameMailPass(user.username, user.email, user.password)
                 },
                 {
                     Timber.e(it)

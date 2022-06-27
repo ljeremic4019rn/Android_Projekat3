@@ -14,6 +14,7 @@ class PortfolioRepositoryImpl(private val userDao: UserDao, private val stockDao
 
 
     override fun getUserByNameMailPass(username: String,email: String,password: String): Observable<UserEntity> {
+
         return userDao.getUserByUsernameEmailPass(username, email, password)
     }
 

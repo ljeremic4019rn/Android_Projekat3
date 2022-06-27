@@ -18,7 +18,6 @@ interface PortfolioContract {
         val userStocks: LiveData<List<LocalStock>>
         val amountOfOwned: ArrayList<GroupedStock>
 
-
         fun getAllStocksFromUser(userId: Long)
         fun getAllStocksFromUserGrouped(userId: Long)
         fun insertUser(user: UserEntity)

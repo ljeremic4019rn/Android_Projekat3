@@ -18,6 +18,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var passwordInput: EditText
     private lateinit var emailInput: EditText
     private lateinit var loginButton: Button
+    private lateinit var registerButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,30 +32,40 @@ class LoginActivity : AppCompatActivity() {
         passwordInput = findViewById(R.id.passwordInput)
         emailInput = findViewById(R.id.emailInput)
         loginButton = findViewById(R.id.loginButton)
+        registerButton = findViewById(R.id.registerButton)
     }
 
     private fun initListeners() {
-        val sharedPreferences = getSharedPreferences(packageName, MODE_PRIVATE)
         loginButton.setOnClickListener {
-            val username = usernameInput.text.toString()
-            val password = passwordInput.text.toString()
-            val email = emailInput.text.toString()
+            saveInfo("LOGIN")
+        }
 
-            if (username != "" && password != "" && email != "" && password.length >= 5 && password == PASSWORD) {
-                sharedPreferences
-                    .edit()
-                    .putString("username", username)
-                    .putString("email", email)
-                    .putString("password", password)
-                    .apply()
+        registerButton.setOnClickListener{
+            saveInfo("REGISTER")
+        }
+    }
 
-                val intent = Intent(this, AppActivity::class.java)
-                startActivity(intent)
-                finish()
-            } else {
-                Toast.makeText(this, "Error logging in", Toast.LENGTH_SHORT).show()
-            }
+    private fun saveInfo(mode: String){
+        val sharedPreferences = getSharedPreferences(packageName, MODE_PRIVATE)
 
+        val username = usernameInput.text.toString()
+        val password = passwordInput.text.toString()
+        val email = emailInput.text.toString()
+
+        if (username != "" && password != "" && email != "" && password.length >= 5) {
+            sharedPreferences
+                .edit()
+                .putString("mode", mode)
+                .putString("username", username)
+                .putString("email", email)
+                .putString("password", password)
+                .apply()
+
+            val intent = Intent(this, AppActivity::class.java)
+            startActivity(intent)
+            finish()
+        } else {
+            Toast.makeText(this, "Error logging in, pass > 5", Toast.LENGTH_SHORT).show()
         }
     }
 }

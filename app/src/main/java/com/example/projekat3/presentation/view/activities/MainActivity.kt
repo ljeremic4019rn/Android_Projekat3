@@ -17,15 +17,18 @@ class MainActivity : AppCompatActivity() {
         splashScreen.setKeepOnScreenCondition {
             val sharedPreferences = getSharedPreferences(packageName, MODE_PRIVATE)
             val username = sharedPreferences.getString("username", "")
+
             intent = if (username == "") {
                 Intent(this, LoginActivity::class.java)
             } else {
+                sharedPreferences.edit().putString("mode", "LOGIN").apply()
                 Intent(this, AppActivity::class.java)
             }
             startActivity(intent)
             finish()
             false
         }
+
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

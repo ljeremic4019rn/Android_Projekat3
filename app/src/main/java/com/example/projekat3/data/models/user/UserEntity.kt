@@ -1,6 +1,7 @@
 package com.example.projekat3.data.models.user
 
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "users")

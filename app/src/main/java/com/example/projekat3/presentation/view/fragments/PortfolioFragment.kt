@@ -33,6 +33,8 @@ import java.time.LocalDate
 import java.time.ZoneId
 import kotlin.collections.ArrayList
 import com.example.projekat3.data.models.stocks.GroupedStock
+import com.example.projekat3.data.models.user.UserEntity
+import java.sql.SQLOutput
 import java.util.*
 
 
@@ -79,11 +81,18 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
     private fun loadUser(){//todo ako je nov dodaj ga u bazu
         val sharedPreferences = activity?.getSharedPreferences(activity?.packageName, AppCompatActivity.MODE_PRIVATE)
 
+        val mode = sharedPreferences?.getString("mode", "").toString()
         val username = sharedPreferences?.getString("username", "").toString()
         val email = sharedPreferences?.getString("email", "").toString()
         val password = sharedPreferences?.getString("password", "").toString()
 
-        portfolioViewModel.getUserByNameMailPass(username, email, password)
+        if (mode == "LOGIN"){
+            portfolioViewModel.getUserByNameMailPass(username, email, password)
+        }
+        else if (mode == "REGISTER"){
+            portfolioViewModel.insertUser(UserEntity(0,username, email, password, 1000.0, 0.0))
+        }
+        sharedPreferences?.edit()?.putString("mode", "")?.apply()
     }
 
 
@@ -94,6 +103,9 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
 
         portfolioViewModel.user.observe(viewLifecycleOwner) {
             if (portfolioViewModel.user.value?.id == 0L) Toast.makeText(context, "Please login as existing user", Toast.LENGTH_SHORT).show()
+
+            println("USERRRRR")
+            println(portfolioViewModel.user.value.toString())
 
             portfolioViewModel.getAllStocksFromUserGrouped(portfolioViewModel.user.value!!.id)
             binding.userBalance.text = portfolioViewModel.user.value!!.balance.toString()
