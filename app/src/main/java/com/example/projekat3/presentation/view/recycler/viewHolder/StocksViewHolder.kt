@@ -21,13 +21,14 @@ class StocksViewHolder (private val itemBinding: StocksItemBinding, val openDeta
         itemBinding.lastPrice.text = stock.last.toString()
         itemBinding.stockSymbol.text = stock.symbol
 
+
+        //ucitavanje grafa
         val ourLineChartEntries: ArrayList<Entry> = ArrayList()
         var i = 0
 
         itemBinding.chart1.setBackgroundColor(Color.WHITE)
         itemBinding.chart1.description.isEnabled = false
         itemBinding.chart1.setDrawGridBackground(false)
-//        itemBinding.chart1.isClickable = false
         itemBinding.chart1.setScaleEnabled(true)
         itemBinding.chart1.setPinchZoom(true)
         itemBinding.chart1.isDragEnabled = true

@@ -83,7 +83,7 @@ class StocksFragment : Fragment(R.layout.fragment_stocks){
     }
 
     private fun openDetailed(stock: Stock){
-        val myJson = activity?.resources?.openRawResource(R.raw.search_quote)
+        val myJson = activity?.resources?.openRawResource(R.raw.search_quote)//ucitavamo json file jer ne mozemo sa online baze
             ?.let {
                 inputStreamToString(it)
             }
@@ -93,6 +93,10 @@ class StocksFragment : Fragment(R.layout.fragment_stocks){
         }
     }
 
+    /*
+    objasnjenje za rad ovoga je napisano u PortfolioFragment
+    rad ove funkcije je identican !
+     */
     private fun startDetailedActivity(detailedStock: DetailedStock?) {
         val intent = Intent(activity, DetailedStockActivity::class.java)
         intent.putExtra("detailedStock", detailedStock)

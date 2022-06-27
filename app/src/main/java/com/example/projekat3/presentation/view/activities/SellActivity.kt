@@ -43,8 +43,13 @@ class SellActivity : AppCompatActivity(){
         stockAmountToSell.hint = "0"
     }
 
-    private fun setListeners() {
 
+    /*
+    switch menja input field izmedju editable i read only (stavi numberOfOwned)
+    ako se upise rec umesto broja moze da pravi probleme ali bi trebalo da se dobije 0 kao fail safe
+     */
+
+    private fun setListeners() {
         stockSellSwitch.setOnClickListener {
             if (stockSellSwitch.isChecked) {
                 stockAmountToSell.setText(numberOfOwned.toString())
@@ -57,7 +62,7 @@ class SellActivity : AppCompatActivity(){
         sellButton.setOnClickListener {
             val numberOfSold = Integer.parseInt(stockAmountToSell.text.toString())
 
-            if (numberOfSold in 0..numberOfOwned) {
+            if (numberOfSold in 0..numberOfOwned) {//ako je broj izmedju 0 i koliko imamo, mozemo taj broj deonica  da prodamo
                 val returnIntent = Intent()
                 returnIntent.putExtra("numberOfSold", numberOfSold)
                 this.setResult(RESULT_OK, returnIntent)

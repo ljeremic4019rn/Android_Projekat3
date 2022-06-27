@@ -31,6 +31,11 @@ class LoginActivity : AppCompatActivity() {
         registerButton = findViewById(R.id.registerButton)
     }
 
+    /*
+    mode je da bi se znalo da li da se stavi novi user na bazu ili da se ucita stari
+    ako se uloguje kao ne postojeci user puca program !!!
+     */
+
     private fun initListeners() {
         loginButton.setOnClickListener {
             saveInfo("LOGIN")

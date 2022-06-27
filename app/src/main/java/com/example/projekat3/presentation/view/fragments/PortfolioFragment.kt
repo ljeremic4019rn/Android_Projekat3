@@ -77,7 +77,8 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
 }
 
 
-
+    //ovo se pokrene na pokretaju programa i zavisno od mode ili ucita starog usera ili ubaci novog u bazu
+    //kada se ubaci novi u bazu u portfolioViewModelu se onda ucitaju njegovi podaci iz baze
     private fun loadUser(){
         val sharedPreferences = activity?.getSharedPreferences(activity?.packageName, AppCompatActivity.MODE_PRIVATE)
 
@@ -97,33 +98,33 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
 
 
     private fun initObservers() {
+        val ourLineChartEntries: ArrayList<Entry> = ArrayList()
+        var i = 0
+        var initialPortfolio = 0.0
+
         portfolioViewModel.portfolioState.observe(viewLifecycleOwner) { newsState ->
             renderState(newsState)
         }
 
+        /*
+        kada se ovo updatuje mozemo da povucemo iz baze sve deonice koje on poseduje
+        ne moze pre jer se nije id povukao iz baze
+
+        te deonice se stave u userStocks -> observer ispod ovoga se onda aktivira i ucita se graf na osnovu tih podataka
+         */
         portfolioViewModel.user.observe(viewLifecycleOwner) {
             if (portfolioViewModel.user.value?.id == 0L) Toast.makeText(context, "Please login as existing user", Toast.LENGTH_SHORT).show()
-
-//            println("USERRRRR")
-//            println(portfolioViewModel.user.value.toString())
-
             portfolioViewModel.getAllStocksFromUserGrouped(portfolioViewModel.user.value!!.id)
             binding.userBalance.text = portfolioViewModel.user.value!!.balance.toString()
             binding.userPortfolio.text = portfolioViewModel.user.value!!.portfolioValue.toString()
         }
 
-        val ourLineChartEntries: ArrayList<Entry> = ArrayList()
-        var i = 0
-        var initialPortfolio = 0.0
+        //ucitavanje grafa
 
         portfolioViewModel.userStocks.observe(viewLifecycleOwner) {
             ourLineChartEntries.clear()
             binding.porfolioChart.invalidate()
             binding.porfolioChart.clear()
-
-            println("valueeeee")
-            println(portfolioViewModel.userStocks.value)
-
 
             portfolioViewModel.userStocks.value?.forEach {
                 val value = it.value
@@ -146,7 +147,7 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
     }
 
     private fun initRecycler(){
-        adapter = PortfolioStockAdapter(::openDetailed)
+        adapter = PortfolioStockAdapter(::openDetailed)//on click metoda
         binding.userStocksRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL,false)
         binding.userStocksRv.addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL))
         binding.userStocksRv.adapter = adapter
@@ -154,7 +155,7 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
 
 
     private fun openDetailed(localStock: GroupedStock){
-        val myJson = activity?.resources?.openRawResource(R.raw.search_quote)
+        val myJson = activity?.resources?.openRawResource(R.raw.search_quote)//ucitavamo json file jer ne mozemo sa online baze
             ?.let { inputStreamToString(it) }
         if (myJson != null) {
             portfolioViewModel.searchStock(myJson)
@@ -174,8 +175,12 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
         if (it.resultCode == Activity.RESULT_OK) {
             val data = it.data
 
-            val dateNow: Date = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant())
+            val dateNow: Date = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant())//datum za deonice
 
+            /*
+            primamo broj kupljenih/prodatih i balanc dobijen/izgubljen
+            moze da sve ide kroz istu funkciju jer su namesteni da budu -/+ u odnosu na buy/sell
+             */
             val numberOfBought = data!!.getIntExtra("numberOfBought",0)
             val balanceSpent = data.getDoubleExtra("balanceSpent",0.0)
             val name = data.getStringExtra("name")
@@ -195,9 +200,11 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
                         balanceSpent
                     )
                 )
+                //u kolakni objekat usera stavljamo nove vrednosti
                 portfolioViewModel.user.value!!.balance += balanceSpent
                 portfolioViewModel.user.value!!.portfolioValue += balanceSpent * -1
 
+                //na usera u bazi stavljamo nove vrednosti
                 portfolioViewModel.updateUserBalance(
                     portfolioViewModel.user.value!!.id,
                     portfolioViewModel.user.value!!.balance,
@@ -216,6 +223,11 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
         }
     }
 
+    /*
+    kada se ucitava recycler napravim kopiju svih deonica i stavim je u amountOfOwned listu sa for each
+    kada se funkcija  ispod , getAmountOfClickedStock, aktivira ona prodje kroz listu i nadje sve koje imaju ime deonice na koju smo kliknuli
+    i vrati sumu, tj koliko imamo te deonice
+     */
     private fun renderState(state: PortfolioState) {
         when (state) {
             is PortfolioState.StockSuccessGrouped -> {
@@ -239,6 +251,7 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
         }
     }
 
+    //objasnjenej linija 228
     private fun getAmountOfClickedStock(name: String): Int{
         portfolioViewModel.amountOfOwned.forEach{
             if (it.name == name) return it.sum

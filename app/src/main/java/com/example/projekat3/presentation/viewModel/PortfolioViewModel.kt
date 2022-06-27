@@ -40,7 +40,7 @@ class PortfolioViewModel(private val portfolioRepository: PortfolioRepository) :
             .subscribe(
                 {
                     user.value = User(it.id, it.username, it.email, it.password, it.balance, it.portfolioValue)
-                    getAllStocksFromUser(it.id)
+                    getAllStocksFromUser(it.id)//nakon getovanja usera, getujemo sve njegove deonice
                 },
                 {
                     Timber.e(it)
@@ -59,7 +59,7 @@ class PortfolioViewModel(private val portfolioRepository: PortfolioRepository) :
             .subscribe(
                 {
                     Timber.e("COMPLETE")
-                    getUserByNameMailPass(user.username, user.email, user.password)
+                    getUserByNameMailPass(user.username, user.email, user.password)//nakon insertovanja getujemo njegove podatke
                 },
                 {
                     Timber.e(it)
@@ -104,6 +104,7 @@ class PortfolioViewModel(private val portfolioRepository: PortfolioRepository) :
         subscriptions.add(subscription)
     }
 
+    //grupisani su po imenu, i sumirane kolicine
     override fun getAllStocksFromUserGrouped(userId: Long) {
         val subscription = portfolioRepository
             .getAllStocksFromUserGrouped(userId)

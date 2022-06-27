@@ -33,7 +33,7 @@ class BuyActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_buy)
 
-        if (intent.getParcelableExtra<DetailedStock>("detailedStock") != null) {
+        if (intent.getParcelableExtra<DetailedStock>("detailedStock") != null) {//uzimamo podatke potrebne za obradu
             detailedStock = intent.getParcelableExtra("detailedStock")!!
             balanceValue = intent.getDoubleExtra("balance", 0.0)
             last = intent.getDoubleExtra("last", 0.0)
@@ -66,6 +66,15 @@ class BuyActivity : AppCompatActivity() {
             else mode.text = "Input balance amount"
         }
 
+        /*
+        switch on
+            proverimo ako je je ukucani balans dovoljno velik da moze da pokrije koliko smo deonica izabrali
+            stvljamo broj ukucan u extra i saljemo
+
+        switch off
+            proverimo ako je balans veci od ukucanog
+            stvljamo broj ukucan u extra i saljemo
+         */
         buyButton.setOnClickListener {
             //number of stock
             if (stockBuySwitch.isChecked) {

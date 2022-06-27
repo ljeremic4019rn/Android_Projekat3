@@ -46,7 +46,7 @@ class DetailedStockActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detailed_stock)
 
-        if (intent.getParcelableExtra<DetailedStock>("detailedStock") != null) {
+        if (intent.getParcelableExtra<DetailedStock>("detailedStock") != null) {//uzimamo podatke koji su nam potrebni za obradu
             detailedStock = intent.getParcelableExtra("detailedStock")!!
             balance = intent.getDoubleExtra("balance", 0.0)
         } else {
@@ -82,7 +82,6 @@ class DetailedStockActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun setData() {
-
         stockSymbol.text = "symbol: " + detailedStock.symbol
         stockValue.text = "value: " + detailedStock.last.toString()
 
@@ -97,7 +96,7 @@ class DetailedStockActivity : AppCompatActivity() {
         ebit.text = "ebit: " + detailedStock.metrics.ebit.toString()
         beta.text = "beta: " + detailedStock.metrics.beta.toString()
 
-        //chart
+        //podesavamo chart prema podacima
         val ourLineChartEntries: ArrayList<Entry> = ArrayList()
         var i = 0
 
@@ -107,12 +106,10 @@ class DetailedStockActivity : AppCompatActivity() {
         chart.isDragEnabled = true
         chart.setScaleEnabled(true)
         chart.setPinchZoom(true)
-
         detailedStock.chart.bars.forEach {
             val value = it.price.toFloat()
             ourLineChartEntries.add(Entry(i++.toFloat(), value))
         }
-
         val lineDataSet = LineDataSet(ourLineChartEntries, "")
         lineDataSet.color = Color.BLACK
         val data = LineData(lineDataSet)
@@ -130,15 +127,21 @@ class DetailedStockActivity : AppCompatActivity() {
         }
     }
 
-
+    //SELL ACTIVITY
     private fun startSellActivity() {
         val intent = Intent(this, SellActivity::class.java)
         intent.putExtra("name", detailedStock.name)
         intent.putExtra("symbol", detailedStock.name)
-        intent.putExtra("numberOfOwned", this.intent.getIntExtra("numberOfOwned", 0))
+        intent.putExtra("numberOfOwned", this.intent.getIntExtra("numberOfOwned", 0))//limit koliko mozemo da prodamo
         doSellAction.launch(intent)
     }
 
+    /*
+     primimo broj deonica koji smo uneli za prodaju numberOfSold
+     mnozimo ga sa balansom usera da dobijemo profit
+     numberOfSold * -1 da bi se oduzelo pri sabiranju kada budemo prolazili kroz listu
+     zapakujemo i posaljemo nazad
+     */
     private val doSellAction: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == Activity.RESULT_OK) {
             val data = it.data
@@ -156,7 +159,7 @@ class DetailedStockActivity : AppCompatActivity() {
         }
     }
 
-
+    //BUY ACTIVITY
     private fun startBuyActivity() {
         val intent = Intent(this, BuyActivity::class.java)
         intent.putExtra("detailedStock", detailedStock)
@@ -165,6 +168,19 @@ class DetailedStockActivity : AppCompatActivity() {
         doBuyAction.launch(intent)
     }
 
+    /*
+    -BALANCE-
+        primimo broj unetog novca
+        podelimo ga sa cenom deonice da znamo koliko smo kupili
+        pomnozoimo broj kupljenih, sa  cenom deonice -> da bi dobili pravu cenu (da ne bi skinuli 1000 ako je kostalo 998)
+        zapakujemo i posaljemo nazad
+
+   -NUMBER-
+        broj kupljenih pomnozimo sa cenom deonice
+        zapakujemo i posaljemo
+
+        balance * -1 da bi oduzimali balance pri prolasku kroz listu
+     */
     private val doBuyAction: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == Activity.RESULT_OK) {
             val data = it.data
