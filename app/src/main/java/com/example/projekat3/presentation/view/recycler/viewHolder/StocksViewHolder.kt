@@ -17,15 +17,13 @@ class StocksViewHolder (private val itemBinding: StocksItemBinding, val openDeta
     }
 
     fun bind(stock: Stock){
+        //ucitavanje grafa
+        val entries: ArrayList<Entry> = ArrayList()
+        var i = 0
+
         itemBinding.stockName.text = stock.name
         itemBinding.lastPrice.text = stock.last.toString()
         itemBinding.stockSymbol.text = stock.symbol
-
-
-        //ucitavanje grafa
-        val ourLineChartEntries: ArrayList<Entry> = ArrayList()
-        var i = 0
-
         itemBinding.chart1.setBackgroundColor(Color.WHITE)
         itemBinding.chart1.description.isEnabled = false
         itemBinding.chart1.setDrawGridBackground(false)
@@ -35,14 +33,14 @@ class StocksViewHolder (private val itemBinding: StocksItemBinding, val openDeta
 
         stock.chart.bars.forEach {
             val value = it.price.toFloat()
-            ourLineChartEntries.add(Entry(i++.toFloat(), value))
+            entries.add(Entry(i++.toFloat(), value))
         }
 
-        val lineDataSet = LineDataSet(ourLineChartEntries, "")
-        if(stock.changeFromPreviousClose < 0){
-            lineDataSet.color = Color.RED
-        } else {
+        val lineDataSet = LineDataSet(entries, "")
+        if(stock.changeFromPreviousClose > 0){
             lineDataSet.color = Color.GREEN
+        } else {
+            lineDataSet.color = Color.RED
         }
         val data = LineData(lineDataSet)
         itemBinding.chart1.data = data

@@ -68,16 +68,16 @@ class DetailedStockActivity : AppCompatActivity() {
 
         chart = findViewById<View>(R.id.stockDetailsChart) as LineChart
 
-        mktCap = findViewById<View>(R.id.mktCapTextView) as TextView
-        open = findViewById<View>(R.id.openTextView) as TextView
+        mktCap = findViewById<View>(R.id.mktCapTv) as TextView
+        open = findViewById<View>(R.id.openTv) as TextView
         bid = findViewById<View>(R.id.bidTextView) as TextView
         close = findViewById<View>(R.id.closeTextView) as TextView
-        ask = findViewById<View>(R.id.askTextView) as TextView
-        divYield = findViewById<View>(R.id.divYieldTextView) as TextView
-        pe = findViewById<View>(R.id.peTextView) as TextView
-        eps = findViewById<View>(R.id.epsTextView) as TextView
-        ebit = findViewById<View>(R.id.ebitTextView) as TextView
-        beta = findViewById<View>(R.id.betaTextView) as TextView
+        ask = findViewById<View>(R.id.askTv) as TextView
+        divYield = findViewById<View>(R.id.divYieldTv) as TextView
+        pe = findViewById<View>(R.id.peTv) as TextView
+        eps = findViewById<View>(R.id.epsTv) as TextView
+        ebit = findViewById<View>(R.id.ebitTv) as TextView
+        beta = findViewById<View>(R.id.betaTv) as TextView
     }
 
     @SuppressLint("SetTextI18n")

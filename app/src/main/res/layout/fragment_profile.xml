@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/profImage"
         android:layout_width="148dp"
         android:layout_height="148dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -19,7 +19,7 @@
 
 
     <TextView
-        android:id="@+id/profileUsernameDisplay"
+        android:id="@+id/profileUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
@@ -27,11 +27,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/profImage"
         app:layout_constraintVertical_bias="0.061" />
 
     <Button
-        android:id="@+id/buttonLogOut"
+        android:id="@+id/logoutBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:width="340dp"

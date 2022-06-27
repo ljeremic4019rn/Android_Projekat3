@@ -30,7 +30,7 @@ class SellActivity : AppCompatActivity(){
     }
 
     private fun initFields() {
-        stockName = findViewById<View>(R.id.sellNameTv) as TextView
+        stockName = findViewById<View>(R.id.sellNameText) as TextView
         stockSellSwitch = findViewById<View>(R.id.sellSwitch) as Switch
         stockAmountToSell = findViewById<View>(R.id.sellNumber) as EditText
         sellButton = findViewById<View>(R.id.sellButton) as Button

@@ -15,20 +15,19 @@ class NewsRepositoryImpl(private val remoteDataSource: NewsService) : NewsReposi
     override fun fetchAll(json: String): Observable<List<News>> {
 
         val gson = Gson()
-        val listNewsType = object : TypeToken<List<NewsResponse>>() {}.type
-
-        val news: List<NewsResponse> = gson.fromJson(json, listNewsType)
+        val newsType = object : TypeToken<List<NewsResponse>>() {}.type
+        val news: List<NewsResponse> = gson.fromJson(json, newsType)
         val newsObservable = Observable.fromArray(news)
 
         return newsObservable.map {
-            it.map { newsResponse: NewsResponse ->
+            it.map { news: NewsResponse ->
                 News(
                     id = idCounter.getAndIncrement(),
-                    title = newsResponse.title,
-                    content = newsResponse.title,
-                    link = newsResponse.link,
-                    date = newsResponse.date,
-                    image = newsResponse.image
+                    title = news.title,
+                    content = news.title,
+                    link = news.link,
+                    date = news.date,
+                    image = news.image
                 )
             }
         }

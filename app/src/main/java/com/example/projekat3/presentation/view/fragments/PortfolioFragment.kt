@@ -34,7 +34,6 @@ import java.time.ZoneId
 import kotlin.collections.ArrayList
 import com.example.projekat3.data.models.stocks.GroupedStock
 import com.example.projekat3.data.models.user.UserEntity
-import java.sql.SQLOutput
 import java.util.*
 
 
@@ -68,12 +67,12 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
     }
 
     private fun initView(){
-        binding.porfolioChart.setBackgroundColor(Color.WHITE)
-        binding.porfolioChart.description.isEnabled = false
-        binding.porfolioChart.setDrawGridBackground(false)
-        binding.porfolioChart.isDragEnabled = true
-        binding.porfolioChart.setScaleEnabled(true)
-        binding.porfolioChart.setPinchZoom(true)
+        binding.portChart.setBackgroundColor(Color.WHITE)
+        binding.portChart.description.isEnabled = false
+        binding.portChart.setDrawGridBackground(false)
+        binding.portChart.isDragEnabled = true
+        binding.portChart.setScaleEnabled(true)
+        binding.portChart.setPinchZoom(true)
 }
 
 
@@ -91,16 +90,15 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
             portfolioViewModel.getUserByNameMailPass(username, email, password)
         }
         else if (mode == "REGISTER"){
-            portfolioViewModel.insertUser(UserEntity(0,username, email, password, 1000.0, 0.0))
+            portfolioViewModel.insertUser(UserEntity(0,username, email, password, 10000.0, 0.0))
         }
         sharedPreferences?.edit()?.putString("mode", "")?.apply()
     }
 
 
     private fun initObservers() {
-        val ourLineChartEntries: ArrayList<Entry> = ArrayList()
-        var i = 0
-        var initialPortfolio = 0.0
+        val entries: ArrayList<Entry> = ArrayList()
+
 
         portfolioViewModel.portfolioState.observe(viewLifecycleOwner) { newsState ->
             renderState(newsState)
@@ -116,41 +114,50 @@ class PortfolioFragment: Fragment(R.layout.fragment_portfolio)  {
             if (portfolioViewModel.user.value?.id == 0L) Toast.makeText(context, "Please login as existing user", Toast.LENGTH_SHORT).show()
             portfolioViewModel.getAllStocksFromUserGrouped(portfolioViewModel.user.value!!.id)
             binding.userBalance.text = portfolioViewModel.user.value!!.balance.toString()
-            binding.userPortfolio.text = portfolioViewModel.user.value!!.portfolioValue.toString()
+            binding.userPortfolioValue.text = portfolioViewModel.user.value!!.portfolioValue.toString()
         }
 
         //ucitavanje grafa
 
-        portfolioViewModel.userStocks.observe(viewLifecycleOwner) {
-            ourLineChartEntries.clear()
-            binding.porfolioChart.invalidate()
-            binding.porfolioChart.clear()
 
-            portfolioViewModel.userStocks.value?.forEach {
+
+
+        portfolioViewModel.userStocks.observe(viewLifecycleOwner) {
+            var i = 0
+            var initialPortfolio = 0.0
+
+            entries.clear()
+            binding.portChart.invalidate()
+            binding.portChart.clear()
+
+            entries.add(Entry(i++.toFloat(), 0F))//stavljanje inicijalno da bude 0
+
+            portfolioViewModel.userStocks.value!!.forEach {
                 val value = it.value
                 initialPortfolio += value * -1
 
-                ourLineChartEntries.add(Entry(i++.toFloat(), initialPortfolio.toFloat()))
+                entries.add(Entry(i++.toFloat(), initialPortfolio.toFloat()))
 
-                val lineDataSet = LineDataSet(ourLineChartEntries, "")
-                lineDataSet.color = Color.BLACK
+                val lineDataSet = LineDataSet(entries, "")
+                lineDataSet.color = Color.BLUE
+                lineDataSet.setCircleColor(Color.GREEN)
                 val data = LineData(lineDataSet)
-                binding.porfolioChart.data = data
-                binding.porfolioChart.invalidate()
+                binding.portChart.data = data
+                binding.portChart.invalidate()
             }
 
             if (portfolioViewModel.user.value?.id == 0L) {
                 binding.userBalance.text = portfolioViewModel.user.value!!.balance.toString()
-                binding.userPortfolio.text = portfolioViewModel.user.value!!.portfolioValue.toString()
+                binding.userPortfolioValue.text = portfolioViewModel.user.value!!.portfolioValue.toString()
             }
         }
     }
 
     private fun initRecycler(){
         adapter = PortfolioStockAdapter(::openDetailed)//on click metoda
-        binding.userStocksRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL,false)
-        binding.userStocksRv.addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL))
-        binding.userStocksRv.adapter = adapter
+        binding.portRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL,false)
+        binding.portRv.addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL))
+        binding.portRv.adapter = adapter
     }
 
 

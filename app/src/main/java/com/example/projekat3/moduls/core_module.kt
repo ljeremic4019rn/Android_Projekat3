@@ -46,7 +46,7 @@ fun createMoshi(): Moshi {
 
 fun createRetrofit(moshi: Moshi,httpClient: OkHttpClient): Retrofit {//todo pogledaj ovo kasnije / promeni mozda
     return Retrofit.Builder()
-        .baseUrl("https://rfidis.raf.edu.rs/")
+        .baseUrl("https://rfidis.raf.edu.rs/")//ovo stoji da se ne bi crashovalo, posto dati link za ovja proj  ne radi
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
         .client(httpClient)

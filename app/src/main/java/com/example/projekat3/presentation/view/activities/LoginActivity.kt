@@ -10,25 +10,26 @@ import com.example.projekat3.R
 
 class LoginActivity : AppCompatActivity() {
 
-    private lateinit var usernameInput: EditText
-    private lateinit var passwordInput: EditText
-    private lateinit var emailInput: EditText
     private lateinit var loginButton: Button
+    private lateinit var passwordInput: EditText
     private lateinit var registerButton: Button
+    private lateinit var usernameInput: EditText
+    private lateinit var emailInput: EditText
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        init()
+        initView()
         initListeners()
     }
 
-    private fun init() {
-        usernameInput = findViewById(R.id.usernameInput)
-        passwordInput = findViewById(R.id.passwordInput)
-        emailInput = findViewById(R.id.emailInput)
-        loginButton = findViewById(R.id.loginButton)
-        registerButton = findViewById(R.id.registerButton)
+    private fun initView() {
+        registerButton = findViewById(R.id.registerBtn)
+        emailInput = findViewById(R.id.emailIn)
+        loginButton = findViewById(R.id.loginBtn)
+        usernameInput = findViewById(R.id.usernameIn)
+        passwordInput = findViewById(R.id.passwordIn)
     }
 
     /*
@@ -49,9 +50,9 @@ class LoginActivity : AppCompatActivity() {
     private fun saveInfo(mode: String){
         val sharedPreferences = getSharedPreferences(packageName, MODE_PRIVATE)
 
+        val email = emailInput.text.toString()
         val username = usernameInput.text.toString()
         val password = passwordInput.text.toString()
-        val email = emailInput.text.toString()
 
         if (username != "" && password != "" && email != "" && password.length >= 5) {
             sharedPreferences

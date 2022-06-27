@@ -1,7 +1,7 @@
 package com.example.projekat3.presentation.view.fragments
 
-import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -12,28 +12,30 @@ import com.example.projekat3.R
 import com.example.projekat3.presentation.view.activities.LoginActivity
 
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
-    private lateinit var usernameTextView: TextView
-    private lateinit var logoutButton: Button
+    private lateinit var usernameTv: TextView
+    private lateinit var button: Button
+    private lateinit var sharedPreferences: SharedPreferences
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {//todo proveri
         super.onViewCreated(view, savedInstanceState)
-        init(view)
+        sharedPreferences = activity?.getSharedPreferences(activity?.packageName, AppCompatActivity.MODE_PRIVATE)!!
+
+        initView(view)
+        initListeners()
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun init(view: View) {
-        val sharedPreferences =
-            activity?.getSharedPreferences(activity?.packageName, AppCompatActivity.MODE_PRIVATE)
-        usernameTextView = view.findViewById(R.id.profileUsernameDisplay)
+    private fun initView(view: View){
+        usernameTv = view.findViewById(R.id.profileUsername)
+        button = view.findViewById(R.id.logoutBtn)
 
-        val textToDisplay = sharedPreferences?.getString("username", "")
+        usernameTv.text = sharedPreferences.getString("username", "")
+    }
 
-        usernameTextView.text = "Hello, $textToDisplay"
-        logoutButton = view.findViewById(R.id.buttonLogOut)
-        logoutButton.setOnClickListener {
-            sharedPreferences?.edit()?.clear()?.apply()
-            val loginIntent = Intent(activity, LoginActivity::class.java)
-            startActivity(loginIntent)
+    private fun initListeners() {
+        button.setOnClickListener {
+            sharedPreferences.edit()?.clear()?.apply()
+            startActivity(Intent(activity, LoginActivity::class.java))
             activity?.finish()
         }
     }

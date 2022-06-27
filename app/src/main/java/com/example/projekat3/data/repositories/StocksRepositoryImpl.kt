@@ -15,7 +15,7 @@ class StocksRepositoryImpl(private val remoteDataSource: StockService) : StocksR
 
     private var idCounter: AtomicLong = AtomicLong(0)
 
-    override fun fetchAll(json: String): Observable<List<Stock>> {//Observable<Resource<Unit>>
+    override fun fetchAll(json: String): Observable<List<Stock>> {
         val gson = Gson()
         val stocksType = object : TypeToken<List<StockResponse>>() {}.type
         val stocks: List<StockResponse> = gson.fromJson(json, stocksType)
@@ -57,27 +57,4 @@ class StocksRepositoryImpl(private val remoteDataSource: StockService) : StocksR
                 chart = dsResponse.chart
             )
     }
-
-
-//    override fun searchStock(json: String): Single<DetailedStock> {
-//        val gson = Gson()
-//        val dsType = object : TypeToken<DetailedStockResponse>() {}.type
-//        val dsResponse: DetailedStockResponse = gson.fromJson(json, dsType)
-//        val dsObservable = Observable.fromArray(ds)
-//
-//        val detailedStock = DetailedStock(
-//            symbol = dsResponse.symbol,
-//            name = dsResponse.name,
-//            currency = dsResponse.currency,
-//            open = dsResponse.open,
-//            close = dsResponse.close,
-//            bid = dsResponse.bid,
-//            ask = dsResponse.ask,
-//            metrics = dsResponse.metrics,
-//            chart = dsResponse.chart
-//        )
-//
-//        return Observable.fromCallable(detailedStock)
-//
-//    }
 }

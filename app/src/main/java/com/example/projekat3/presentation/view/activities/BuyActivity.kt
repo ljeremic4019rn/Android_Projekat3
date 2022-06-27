@@ -75,6 +75,7 @@ class BuyActivity : AppCompatActivity() {
             proverimo ako je balans veci od ukucanog
             stvljamo broj ukucan u extra i saljemo
          */
+
         buyButton.setOnClickListener {
             //number of stock
             if (stockBuySwitch.isChecked) {

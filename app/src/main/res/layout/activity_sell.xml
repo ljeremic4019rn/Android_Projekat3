@@ -7,7 +7,7 @@
 
 
     <TextView
-        android:id="@+id/sellNameTv"
+        android:id="@+id/sellNameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/sellNumberTv"
+        android:id="@+id/sellNumberText"
         android:layout_width="93dp"
         android:layout_height="50dp"
         android:layout_marginTop="256dp"
@@ -59,7 +59,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.28"
-        app:layout_constraintStart_toEndOf="@+id/sellNumberTv" />
+        app:layout_constraintStart_toEndOf="@+id/sellNumberText" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -21,6 +21,6 @@ class NewsViewHolder (private val itemBinding: NewsItemBinding, val openLink: (p
         Picasso
             .get()
             .load(news.image)
-            .into(itemBinding.newsImageView)
+            .into(itemBinding.newsIv)
     }
 }

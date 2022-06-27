@@ -74,8 +74,6 @@ class StocksFragment : Fragment(R.layout.fragment_stocks){
     }
 
     private fun initRecycler() {
-        val helper: SnapHelper = LinearSnapHelper()
-        helper.attachToRecyclerView(binding.stocksRv)
         adapter = StocksAdapter(::openDetailed)
         binding.stocksRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL,false)
         binding.stocksRv.addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL))
@@ -100,7 +98,7 @@ class StocksFragment : Fragment(R.layout.fragment_stocks){
     private fun startDetailedActivity(detailedStock: DetailedStock?) {
         val intent = Intent(activity, DetailedStockActivity::class.java)
         intent.putExtra("detailedStock", detailedStock)
-        intent.putExtra("numberOfOwned",getAmountOfClickedStock(detailedStock!!.name))//todo ovaj broj povuci iz baze
+        intent.putExtra("numberOfOwned",getAmountOfClickedStock(detailedStock!!.name))
         intent.putExtra("balance", portfolioViewModel.user.value!!.balance)
         doAction.launch(intent)
     }

@@ -69,7 +69,7 @@ class NewsFragment : Fragment(R.layout.fragment_news){
         newsViewModel.newsState.observe(viewLifecycleOwner) { newsState ->
             renderState(newsState)
         }
-        val myJson = activity?.resources?.openRawResource(R.raw.news)
+        val myJson = activity?.resources?.openRawResource(R.raw.news)//ucitanvanje json-a
             ?.let {
                 inputStreamToString(it)
             }

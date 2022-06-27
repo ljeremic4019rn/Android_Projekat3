@@ -68,7 +68,7 @@
         android:layout_marginTop="12dp"
         android:text="TextView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/openTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/openTv" />
 
     <TextView
         android:id="@+id/closeTextView"
@@ -81,7 +81,7 @@
         app:layout_constraintTop_toBottomOf="@+id/bidTextView" />
 
     <TextView
-        android:id="@+id/openTextView"
+        android:id="@+id/openTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="60dp"
@@ -91,17 +91,17 @@
         app:layout_constraintTop_toBottomOf="@+id/buyButton" />
 
     <TextView
-        android:id="@+id/askTextView"
+        android:id="@+id/askTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="60dp"
         android:layout_marginTop="12dp"
         android:text="TextView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mktCapTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/mktCapTv" />
 
     <TextView
-        android:id="@+id/mktCapTextView"
+        android:id="@+id/mktCapTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="60dp"
@@ -111,17 +111,17 @@
         app:layout_constraintTop_toBottomOf="@+id/closeTextView" />
 
     <TextView
-        android:id="@+id/peTextView"
+        android:id="@+id/peTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="68dp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divYieldTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/divYieldTv" />
 
     <TextView
-        android:id="@+id/divYieldTextView"
+        android:id="@+id/divYieldTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -131,34 +131,34 @@
         app:layout_constraintTop_toBottomOf="@+id/sellButton" />
 
     <TextView
-        android:id="@+id/epsTextView"
+        android:id="@+id/epsTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="68dp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/peTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/peTv" />
 
     <TextView
-        android:id="@+id/betaTextView"
+        android:id="@+id/betaTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="68dp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ebitTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/ebitTv" />
 
     <TextView
-        android:id="@+id/ebitTextView"
+        android:id="@+id/ebitTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="68dp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/epsTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/epsTv" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -21,7 +21,6 @@ class DiscoverFragment : Fragment(R.layout.fragment_discover) {
 
     private fun initNavigation(view: View) {
         viewPager = view.findViewById<View>(R.id.viewPagerTabs) as ViewPager
-        viewPager.offscreenPageLimit = 10
         tabLayout = view.findViewById<View>(R.id.tabLayout) as TabLayout
 
         viewPager.adapter = TopNavPageAdapter(requireActivity().supportFragmentManager)
