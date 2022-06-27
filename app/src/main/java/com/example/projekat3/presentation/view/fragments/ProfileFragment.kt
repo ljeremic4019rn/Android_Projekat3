@@ -17,7 +17,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private lateinit var sharedPreferences: SharedPreferences
 
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {//todo proveri
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sharedPreferences = activity?.getSharedPreferences(activity?.packageName, AppCompatActivity.MODE_PRIVATE)!!
 

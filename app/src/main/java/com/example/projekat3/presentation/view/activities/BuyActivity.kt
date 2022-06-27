@@ -77,25 +77,32 @@ class BuyActivity : AppCompatActivity() {
          */
 
         buyButton.setOnClickListener {
-            //number of stock
-            if (stockBuySwitch.isChecked) {
-                if (balanceValue > Integer.parseInt(number.text.toString()) * last) {//ako je balans vece nego cena * broj kupljenih
-                    val returnIntent = Intent()
-                    returnIntent.putExtra("number", Integer.parseInt(number.text.toString()))
-                    returnIntent.putExtra("mode", "number")
-                    this.setResult(RESULT_OK, returnIntent)
-                    this.finish()
-                } else Toast.makeText(this,"You do not have enough balance",Toast.LENGTH_LONG).show()
+            if (number.text.toString() != "") {
+                //number of stock
+                if (stockBuySwitch.isChecked) {
+                    if (balanceValue > Integer.parseInt(number.text.toString()) * last) {//ako je balans vece nego cena * broj kupljenih
+                        val returnIntent = Intent()
+                        returnIntent.putExtra("number", Integer.parseInt(number.text.toString()))
+                        returnIntent.putExtra("mode", "number")
+                        this.setResult(RESULT_OK, returnIntent)
+                        this.finish()
+                    } else Toast.makeText(this, "You do not have enough balance", Toast.LENGTH_LONG)
+                        .show()
 
-            //balance
-            } else {
-                if (Integer.parseInt(number.text.toString()) <= balanceValue) {
-                    val returnIntent = Intent()
-                    returnIntent.putExtra("number", Integer.parseInt(number.text.toString()))
-                    returnIntent.putExtra("mode", "balance")
-                    this.setResult(RESULT_OK, returnIntent)
-                    this.finish()
-                } else Toast.makeText(this,"Please insert number lesser than $balanceValue",Toast.LENGTH_LONG).show()
+                    //balance
+                } else {
+                    if (Integer.parseInt(number.text.toString()) <= balanceValue) {
+                        val returnIntent = Intent()
+                        returnIntent.putExtra("number", Integer.parseInt(number.text.toString()))
+                        returnIntent.putExtra("mode", "balance")
+                        this.setResult(RESULT_OK, returnIntent)
+                        this.finish()
+                    } else Toast.makeText(
+                        this,
+                        "Please insert number lesser than $balanceValue",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
         }
     }

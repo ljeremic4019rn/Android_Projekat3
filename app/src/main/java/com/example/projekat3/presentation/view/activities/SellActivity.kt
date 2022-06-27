@@ -60,15 +60,20 @@ class SellActivity : AppCompatActivity(){
         }
 
         sellButton.setOnClickListener {
-            val numberOfSold = Integer.parseInt(stockAmountToSell.text.toString())
+            if (stockAmountToSell.text.toString() != "") {
+                val numberOfSold = Integer.parseInt(stockAmountToSell.text.toString())
 
-            if (numberOfSold in 0..numberOfOwned) {//ako je broj izmedju 0 i koliko imamo, mozemo taj broj deonica  da prodamo
-                val returnIntent = Intent()
-                returnIntent.putExtra("numberOfSold", numberOfSold)
-                this.setResult(RESULT_OK, returnIntent)
-                this.finish()
+                if (numberOfSold in 0..numberOfOwned) {//ako je broj izmedju 0 i koliko imamo, mozemo taj broj deonica  da prodamo
+                    val returnIntent = Intent()
+                    returnIntent.putExtra("numberOfSold", numberOfSold)
+                    this.setResult(RESULT_OK, returnIntent)
+                    this.finish()
+                } else Toast.makeText(
+                    this,
+                    "Please insert number 0 < X < $numberOfOwned",
+                    Toast.LENGTH_LONG
+                ).show()
             }
-            else Toast.makeText(this, "Please insert number 0 < X < $numberOfOwned", Toast.LENGTH_LONG).show()
         }
     }
 
